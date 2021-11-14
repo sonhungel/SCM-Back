@@ -7,10 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
+import javax.persistence.*;
 import java.time.LocalDate;
 
 @Getter
@@ -19,7 +16,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @SuperBuilder
 @Entity
-public class Item extends SupperEntity{
+public class Item extends SupperEntity {
 
     @Column(unique = true, nullable = false)
     private Integer itemNumber;
@@ -36,4 +33,19 @@ public class Item extends SupperEntity{
 
     @Column
     private LocalDate updateDate;
+
+    @Column(nullable = false)
+    private Long quantity;
+
+    // gia ban
+    @Column(nullable = false)
+    private Long salesPrice;
+
+    // gia von
+    @Column(nullable = false)
+    private Long cost;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(nullable = true, name = "itemType_id")
+    private ItemType itemType;
 }

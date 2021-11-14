@@ -30,4 +30,15 @@ public class ItemDto extends SupperDto{
     private LocalDate addedDate;
 
     private LocalDate updateDate;
+
+    @NotNull
+    private Long quantity;
+
+    @NotNull
+    private Long salesPrice;
+
+    @NotNull
+    private Long cost;
+
+    private ItemTypeDto itemType;
 }

@@ -1,9 +1,10 @@
 package com.scm.backend.service;
 
 import com.scm.backend.model.dto.ItemDto;
-import com.scm.backend.model.exception.ItemNumberAlreadyExistException;
-import com.scm.backend.model.exception.ItemNumberLessThanOne;
+import com.scm.backend.model.entity.Item;
+import com.scm.backend.model.exception.*;
 
 public interface ItemService {
     void createItem(ItemDto itemDto) throws ItemNumberAlreadyExistException, ItemNumberLessThanOne;
+    Item updateItem(ItemDto itemDto) throws ItemNumberNotFoundException, ConcurrentUpdateItemException, ItemTypeNotFoundException;
 }
