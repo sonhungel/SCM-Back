@@ -14,7 +14,7 @@
 	<name>backend</name>
 	<description>SCM project</description>
 	<properties>
-		<java.version>1.8</java.version>
+		<java.version>11</java.version>
 		<org.mapstruct.version>1.4.2.Final</org.mapstruct.version>
 		<querydsl.version>4.2.2</querydsl.version>
 		<apt-maven-plugin.version>1.1.3</apt-maven-plugin.version>
