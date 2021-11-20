@@ -13,7 +13,7 @@ import java.time.LocalDate;
 @Getter
 @Setter
 @EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = true)
-public class ItemDto extends SupperDto{
+public class ItemDto extends SupperDto {
 
     @EqualsAndHashCode.Include
     @Digits(integer = 4, fraction = 0)
