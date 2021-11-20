@@ -26,7 +26,7 @@ public class ItemServiceImpl implements ItemService {
     private ItemTypeService itemTypeService;
 
     @Override
-    public void createItem(ItemDto itemDto) throws ItemNumberAlreadyExistException, ItemNumberLessThanOne {
+    public void createItem(ItemDto itemDto) throws ItemNumberAlreadyExistException, ItemNumberLessThanOne, ItemTypeNotFoundException {
         checkBeforeCreate(itemDto);
         createNewItemWithDtoData(itemDto);
     }
@@ -55,19 +55,26 @@ public class ItemServiceImpl implements ItemService {
         return item;
     }
 
-    private void createNewItemWithDtoData(ItemDto itemDto) {
+    private void createNewItemWithDtoData(ItemDto itemDto) throws ItemTypeNotFoundException {
         Item item = createNewItem(itemDto);
 
         itemRepository.saveAndFlush(item);
     }
 
-    private Item createNewItem(ItemDto itemDto) {
+    private Item createNewItem(ItemDto itemDto) throws ItemTypeNotFoundException {
+        ItemType itemType = itemTypeService.findItemTypeById(itemDto.getItemType().getId())
+                .orElseThrow(() -> new ItemTypeNotFoundException("Item type not found.", itemDto.getItemType().getTypeName()));
+
         return Item.builder()
                 .itemNumber(itemDto.getItemNumber())
                 .name(itemDto.getName())
                 .state(itemDto.getState())
                 .addedDate(itemDto.getAddedDate())
                 .updateDate(itemDto.getUpdateDate())
+                .quantity(itemDto.getQuantity())
+                .salesPrice(itemDto.getSalesPrice())
+                .cost(itemDto.getCost())
+                .itemType(itemType)
                 .build()
                 ;
     }

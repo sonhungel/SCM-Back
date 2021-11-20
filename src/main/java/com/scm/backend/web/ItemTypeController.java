@@ -24,7 +24,7 @@ public class ItemTypeController {
     private ItemDtoMapper itemDtoMapper;
 
     @PostMapping
-    public ResponseEntity<ResponseDto> createItem(@Valid @RequestBody ItemTypeDto itemTypeDto) {
+    public ResponseEntity<ResponseDto> createItemType(@Valid @RequestBody ItemTypeDto itemTypeDto) {
         itemTypeService.createItemType(itemTypeDto);
         ResponseDto responseDto = new ResponseDto("Create successfully", HttpStatus.OK, null);
         return new ResponseEntity<>(responseDto, HttpStatus.OK);

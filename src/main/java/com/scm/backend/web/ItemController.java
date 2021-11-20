@@ -22,7 +22,7 @@ public class ItemController {
     private ItemDtoMapper itemDtoMapper;
 
     @PostMapping
-    public ResponseEntity<ResponseDto> createItem(@Valid @RequestBody ItemDto itemDto) throws ItemNumberLessThanOne, ItemNumberAlreadyExistException {
+    public ResponseEntity<ResponseDto> createItem(@Valid @RequestBody ItemDto itemDto) throws ItemNumberLessThanOne, ItemNumberAlreadyExistException, ItemTypeNotFoundException {
         itemService.createItem(itemDto);
         ResponseDto responseDto = new ResponseDto("Create successfully", HttpStatus.OK, null);
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
@@ -31,7 +31,7 @@ public class ItemController {
     @PutMapping
     public ResponseEntity<ResponseDto> updateItem(@Valid @RequestBody ItemDto itemDto) throws ItemNumberNotFoundException, ConcurrentUpdateItemException, ItemTypeNotFoundException {
         itemService.updateItem(itemDto);
-        ResponseDto responseDto = new ResponseDto("Create successfully", HttpStatus.OK, null);
+        ResponseDto responseDto = new ResponseDto("Update successfully", HttpStatus.OK, null);
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
     }
 
