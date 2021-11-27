@@ -2,6 +2,7 @@ package com.scm.backend.web.exceptionController;
 
 import com.scm.backend.model.exception.ItemNumberAlreadyExistException;
 import com.scm.backend.model.exception.ItemNumberLessThanOne;
+import com.scm.backend.model.exception.UsernameAlreadyExistException;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -9,6 +10,7 @@ import lombok.Setter;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -85,6 +87,18 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
     @ResponseStatus(HttpStatus.CONFLICT)
     public RestError handleItemNumberLessThanOne(ItemNumberLessThanOne ex) {
         return new RestError(HttpStatus.CONFLICT, Arrays.asList(new RestError.ErrorDetail("itemNumberLessThanOne", "Item number less than 1.")));
+    }
+
+    @ExceptionHandler(UsernameAlreadyExistException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public RestError handleUsernameAlreadyExistException(UsernameAlreadyExistException ex) {
+        return new RestError(HttpStatus.BAD_REQUEST, Arrays.asList(new RestError.ErrorDetail("usernameAlreadyExistException", ex.getMessage())));
+    }
+
+    @ExceptionHandler(UsernameNotFoundException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public RestError handleUsernameNotFoundException(UsernameNotFoundException ex) {
+        return new RestError(HttpStatus.BAD_REQUEST, Arrays.asList(new RestError.ErrorDetail("usernameNotFoundException", ex.getMessage())));
     }
 
 }

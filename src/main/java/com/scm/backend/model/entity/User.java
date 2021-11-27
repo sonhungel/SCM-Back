@@ -11,8 +11,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
-import java.util.Collection;
-import java.util.Date;
+import java.util.*;
 
 @Getter
 @Setter
@@ -21,15 +20,12 @@ import java.util.Date;
 @SuperBuilder
 @Entity
 public class User extends SupperEntity implements UserDetails {
-    @NotBlank(message = "username is required")
     @Column(unique = true)
     private String username;
 
-    @NotBlank(message = "Please enter your full name")
     @Column
     private String fullName;
 
-    @NotBlank(message = "Password field is required")
     @Column
     private String password;
 
@@ -41,6 +37,9 @@ public class User extends SupperEntity implements UserDetails {
 
     @Column
     private Date update_At;
+
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "user")
+    private Set<Invoice> invoiceSet;
 
     @PrePersist
     protected void onCreate(){
