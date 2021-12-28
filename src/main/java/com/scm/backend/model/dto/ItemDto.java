@@ -16,7 +16,7 @@ import java.time.LocalDate;
 public class ItemDto extends SupperDto {
 
     @EqualsAndHashCode.Include
-    @Digits(integer = 4, fraction = 0)
+    @Digits(integer = 9, fraction = 0)
     private Integer itemNumber;
 
     @NotNull
@@ -34,6 +34,8 @@ public class ItemDto extends SupperDto {
     @NotNull
     private Long quantity;
 
+    private Long minimumQuantity;
+
     @NotNull
     private Long salesPrice;
 
@@ -41,4 +43,6 @@ public class ItemDto extends SupperDto {
     private Long cost;
 
     private ItemTypeDto itemType;
+
+    private SupplierDto supplier;
 }

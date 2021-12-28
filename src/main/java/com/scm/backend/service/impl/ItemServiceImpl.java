@@ -4,8 +4,10 @@ import com.google.common.collect.Sets;
 import com.scm.backend.model.dto.ItemDto;
 import com.scm.backend.model.entity.Item;
 import com.scm.backend.model.entity.ItemType;
+import com.scm.backend.model.entity.Supplier;
 import com.scm.backend.model.exception.*;
 import com.scm.backend.repository.ItemRepository;
+import com.scm.backend.repository.SupplierRepository;
 import com.scm.backend.repository.custom.ItemRepositoryCustom;
 import com.scm.backend.service.ItemService;
 import com.scm.backend.service.ItemTypeService;
@@ -25,8 +27,11 @@ public class ItemServiceImpl implements ItemService {
     @Autowired
     private ItemTypeService itemTypeService;
 
+    @Autowired
+    private SupplierRepository supplierRepository;
+
     @Override
-    public void createItem(ItemDto itemDto) throws ItemNumberAlreadyExistException, ItemNumberLessThanOne, ItemTypeNotFoundException {
+    public void createItem(ItemDto itemDto) throws ItemNumberAlreadyExistException, ItemNumberLessThanOne, ItemTypeNotFoundException, SupplierNotFoundException {
         checkBeforeCreate(itemDto);
         createNewItemWithDtoData(itemDto);
     }
@@ -55,15 +60,18 @@ public class ItemServiceImpl implements ItemService {
         return item;
     }
 
-    private void createNewItemWithDtoData(ItemDto itemDto) throws ItemTypeNotFoundException {
+    private void createNewItemWithDtoData(ItemDto itemDto) throws ItemTypeNotFoundException, SupplierNotFoundException {
         Item item = createNewItem(itemDto);
 
         itemRepository.saveAndFlush(item);
     }
 
-    private Item createNewItem(ItemDto itemDto) throws ItemTypeNotFoundException {
+    private Item createNewItem(ItemDto itemDto) throws ItemTypeNotFoundException, SupplierNotFoundException {
         ItemType itemType = itemTypeService.findItemTypeById(itemDto.getItemType().getId())
                 .orElseThrow(() -> new ItemTypeNotFoundException("Item type not found.", itemDto.getItemType().getTypeName()));
+
+        Supplier supplier = supplierRepository.findSupplierBySupplierNumber(itemDto.getSupplier().getSupplierNumber())
+                .orElseThrow(() -> new SupplierNotFoundException("Supplier not found", itemDto.getSupplier().getSupplierNumber()));
 
         return Item.builder()
                 .itemNumber(itemDto.getItemNumber())
@@ -72,9 +80,11 @@ public class ItemServiceImpl implements ItemService {
                 .addedDate(itemDto.getAddedDate())
                 .updateDate(itemDto.getUpdateDate())
                 .quantity(itemDto.getQuantity())
+                .minimumQuantity(itemDto.getMinimumQuantity())
                 .salesPrice(itemDto.getSalesPrice())
                 .cost(itemDto.getCost())
                 .itemType(itemType)
+                .supplier(supplier)
                 .build()
                 ;
     }

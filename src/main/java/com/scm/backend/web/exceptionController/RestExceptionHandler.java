@@ -1,8 +1,7 @@
 package com.scm.backend.web.exceptionController;
 
-import com.scm.backend.model.exception.ItemNumberAlreadyExistException;
-import com.scm.backend.model.exception.ItemNumberLessThanOne;
-import com.scm.backend.model.exception.UsernameAlreadyExistException;
+import com.fasterxml.jackson.databind.exc.MismatchedInputException;
+import com.scm.backend.model.exception.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -99,6 +98,24 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public RestError handleUsernameNotFoundException(UsernameNotFoundException ex) {
         return new RestError(HttpStatus.BAD_REQUEST, Arrays.asList(new RestError.ErrorDetail("usernameNotFoundException", ex.getMessage())));
+    }
+
+    @ExceptionHandler(SupplierNotFoundException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public RestError handleSupplierNotFoundException(SupplierNotFoundException ex) {
+        return new RestError(HttpStatus.BAD_REQUEST, Arrays.asList(new RestError.ErrorDetail("supplierNotFoundException", ex.getMessage())));
+    }
+
+    @ExceptionHandler(SupplierNumberAlreadyExist.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public RestError handleSupplierNotFoundException(SupplierNumberAlreadyExist ex) {
+        return new RestError(HttpStatus.BAD_REQUEST, Arrays.asList(new RestError.ErrorDetail("supplierNumberAlreadyExist", ex.getMessage())));
+    }
+
+    @ExceptionHandler(MismatchedInputException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public RestError handleMismatchedInputException(MismatchedInputException ex) {
+        return new RestError(HttpStatus.BAD_REQUEST, Arrays.asList(new RestError.ErrorDetail("mismatchedInputException", ex.getMessage())));
     }
 
 }

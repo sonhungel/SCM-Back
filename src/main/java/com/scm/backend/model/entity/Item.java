@@ -37,6 +37,9 @@ public class Item extends SupperEntity {
     @Column(nullable = false)
     private Long quantity;
 
+    @Column(nullable = false)
+    private Long minimumQuantity;
+
     // gia ban
     @Column(nullable = false)
     private Long salesPrice;
@@ -48,4 +51,8 @@ public class Item extends SupperEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(nullable = true, name = "itemType_id")
     private ItemType itemType;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(nullable = true, name = "supplier_id")
+    private Supplier supplier;
 }
