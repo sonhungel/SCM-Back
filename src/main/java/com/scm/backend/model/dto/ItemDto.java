@@ -34,6 +34,8 @@ public class ItemDto extends SupperDto {
     @NotNull
     private Long quantity;
 
+    private Long availableQuantity;
+
     private Long minimumQuantity;
 
     @NotNull
@@ -41,6 +43,10 @@ public class ItemDto extends SupperDto {
 
     @NotNull
     private Long cost;
+
+    private String description;
+
+    private String remark;
 
     private ItemTypeDto itemType;
 

@@ -9,6 +9,5 @@ import lombok.Setter;
 @Setter
 @EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = true)
 public class UserInvoiceDto extends SupperDto{
-    @NotNull
     private String username;
 }

@@ -8,7 +8,6 @@ import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
 import javax.persistence.*;
-import java.util.Set;
 
 @Getter
 @Setter
@@ -16,12 +15,20 @@ import java.util.Set;
 @AllArgsConstructor
 @SuperBuilder
 @Entity
-public class Invoice extends SupperEntity {
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(nullable = false, name = "user_id")
-    @JsonIgnore
-    private User user;
+public class InvoiceDetail extends SupperEntity {
+    @Column(nullable = false)
+    private Long quantity;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "invoice")
-    private Set<InvoiceDetail> invoiceDetailSet;
+    @Column(nullable = true)
+    private Double discount;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(nullable = false, name = "invoice_id")
+    @JsonIgnore
+    private Invoice invoice;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(nullable = false, name = "item_id")
+    @JsonIgnore
+    private Item item;
 }

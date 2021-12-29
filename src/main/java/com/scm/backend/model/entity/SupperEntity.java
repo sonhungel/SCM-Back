@@ -7,6 +7,7 @@ import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 
 @MappedSuperclass
 @Getter
@@ -21,4 +22,10 @@ public class SupperEntity {
 
     @Version
     private Integer version;
+
+    @Column
+    private LocalDate addedDate;
+
+    @Column
+    private LocalDate updateDate;
 }

@@ -9,6 +9,7 @@ import lombok.experimental.SuperBuilder;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -17,7 +18,6 @@ import java.time.LocalDate;
 @SuperBuilder
 @Entity
 public class Item extends SupperEntity {
-
     @Column(unique = true, nullable = false)
     private Integer itemNumber;
 
@@ -29,13 +29,10 @@ public class Item extends SupperEntity {
     private ItemState state;
 
     @Column(nullable = false)
-    private LocalDate addedDate;
-
-    @Column
-    private LocalDate updateDate;
+    private Long quantity;
 
     @Column(nullable = false)
-    private Long quantity;
+    private Long availableQuantity;
 
     @Column(nullable = false)
     private Long minimumQuantity;
@@ -48,6 +45,12 @@ public class Item extends SupperEntity {
     @Column(nullable = false)
     private Long cost;
 
+    @Column(nullable = true)
+    private String description;
+
+    @Column(nullable = true)
+    private String remark;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(nullable = true, name = "itemType_id")
     private ItemType itemType;
@@ -55,4 +58,7 @@ public class Item extends SupperEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(nullable = true, name = "supplier_id")
     private Supplier supplier;
+
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "item")
+    private Set<InvoiceDetail> invoiceDetailSet;
 }

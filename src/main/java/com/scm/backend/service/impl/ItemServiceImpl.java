@@ -38,12 +38,12 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public Item updateItem(ItemDto itemDto) throws ItemNumberNotFoundException, ConcurrentUpdateItemException, ItemTypeNotFoundException {
-        Item item = checkBeforeUpdate(itemDto);
+        final Item item = checkBeforeUpdate(itemDto);
         return updateItemWithDtoData(item, itemDto);
     }
 
     private Item updateItemWithDtoData(Item item, ItemDto itemDto) throws ItemTypeNotFoundException {
-        ItemType itemType = itemTypeService.findItemTypeById(itemDto.getItemType().getId())
+        final ItemType itemType = itemTypeService.findItemTypeById(itemDto.getItemType().getId())
                 .orElseThrow(() -> new ItemTypeNotFoundException("Item type not found.", itemDto.getItemType().getTypeName()));
 
 
@@ -54,6 +54,8 @@ public class ItemServiceImpl implements ItemService {
         item.setSalesPrice(itemDto.getSalesPrice());
         item.setCost(itemDto.getCost());
         item.setItemType(itemType);
+        item.setDescription(itemDto.getDescription());
+        item.setRemark(itemDto.getRemark());
 
         itemRepository.save(item);
 
@@ -61,17 +63,19 @@ public class ItemServiceImpl implements ItemService {
     }
 
     private void createNewItemWithDtoData(ItemDto itemDto) throws ItemTypeNotFoundException, SupplierNotFoundException {
-        Item item = createNewItem(itemDto);
+        final Item item = createNewItem(itemDto);
 
         itemRepository.saveAndFlush(item);
     }
 
     private Item createNewItem(ItemDto itemDto) throws ItemTypeNotFoundException, SupplierNotFoundException {
-        ItemType itemType = itemTypeService.findItemTypeById(itemDto.getItemType().getId())
+        final ItemType itemType = itemTypeService.findItemTypeById(itemDto.getItemType().getId())
                 .orElseThrow(() -> new ItemTypeNotFoundException("Item type not found.", itemDto.getItemType().getTypeName()));
 
-        Supplier supplier = supplierRepository.findSupplierBySupplierNumber(itemDto.getSupplier().getSupplierNumber())
+        final Supplier supplier = supplierRepository.findSupplierBySupplierNumber(itemDto.getSupplier().getSupplierNumber())
                 .orElseThrow(() -> new SupplierNotFoundException("Supplier not found", itemDto.getSupplier().getSupplierNumber()));
+
+        itemDto.setAvailableQuantity(itemDto.getQuantity());
 
         return Item.builder()
                 .itemNumber(itemDto.getItemNumber())
@@ -80,11 +84,14 @@ public class ItemServiceImpl implements ItemService {
                 .addedDate(itemDto.getAddedDate())
                 .updateDate(itemDto.getUpdateDate())
                 .quantity(itemDto.getQuantity())
+                .availableQuantity(itemDto.getAvailableQuantity())
                 .minimumQuantity(itemDto.getMinimumQuantity())
                 .salesPrice(itemDto.getSalesPrice())
                 .cost(itemDto.getCost())
                 .itemType(itemType)
                 .supplier(supplier)
+                .description(itemDto.getDescription())
+                .remark(itemDto.getRemark())
                 .build()
                 ;
     }

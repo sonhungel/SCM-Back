@@ -8,6 +8,15 @@ import lombok.Setter;
 @Getter
 @Setter
 @EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = true)
-public class InvoiceDto extends SupperDto {
-    private UserInvoiceDto user;
+public class InvoiceDetailDto extends SupperDto {
+    @NotNull
+    private InvoiceDto invoice;
+
+    @NotNull
+    private ItemRefDto item;
+
+    @NotNull
+    private Long quantity;
+
+    private Double discount;
 }
