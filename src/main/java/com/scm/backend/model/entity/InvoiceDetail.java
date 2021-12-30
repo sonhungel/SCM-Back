@@ -8,6 +8,7 @@ import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 
 @Getter
 @Setter
@@ -15,20 +16,17 @@ import javax.persistence.*;
 @AllArgsConstructor
 @SuperBuilder
 @Entity
-public class InvoiceDetail extends SupperEntity {
+public class InvoiceDetail {
+    @Column
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @EmbeddedId
+    private InvoiceDetailKey key;
+
     @Column(nullable = false)
     private Long quantity;
 
     @Column(nullable = true)
     private Double discount;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(nullable = false, name = "invoice_id")
-    @JsonIgnore
-    private Invoice invoice;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(nullable = false, name = "item_id")
-    @JsonIgnore
-    private Item item;
 }

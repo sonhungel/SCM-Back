@@ -22,6 +22,4 @@ public class Invoice extends SupperEntity {
     @JsonIgnore
     private User user;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "invoice")
-    private Set<InvoiceDetail> invoiceDetailSet;
 }

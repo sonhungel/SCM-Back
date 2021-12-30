@@ -3,6 +3,7 @@ package com.scm.backend.service.impl;
 import com.scm.backend.model.dto.InvoiceDetailDto;
 import com.scm.backend.model.entity.Invoice;
 import com.scm.backend.model.entity.InvoiceDetail;
+import com.scm.backend.model.entity.InvoiceDetailKey;
 import com.scm.backend.model.entity.Item;
 import com.scm.backend.model.exception.InvoiceNotFoundException;
 import com.scm.backend.model.exception.ItemNumberNotFoundException;
@@ -42,9 +43,14 @@ public class InvoiceDetailServiceImpl implements InvoiceDetailService {
         final Item item = itemRepository.findItemByItemNumber(invoiceDetailDto.getItem().getItemNumber())
                 .orElseThrow(() -> new ItemNumberNotFoundException("Item number not found", invoiceDetailDto.getItem().getItemNumber()));
 
-        InvoiceDetail invoiceDetail = InvoiceDetail.builder()
+        InvoiceDetailKey invoiceDetailKey = InvoiceDetailKey.builder()
                 .invoice(invoice)
                 .item(item)
+                .build()
+                ;
+
+        InvoiceDetail invoiceDetail = InvoiceDetail.builder()
+                .key(invoiceDetailKey)
                 .quantity(invoiceDetailDto.getQuantity())
                 .build()
                 ;

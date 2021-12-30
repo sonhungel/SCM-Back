@@ -59,6 +59,4 @@ public class Item extends SupperEntity {
     @JoinColumn(nullable = true, name = "supplier_id")
     private Supplier supplier;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "item")
-    private Set<InvoiceDetail> invoiceDetailSet;
 }
