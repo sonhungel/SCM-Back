@@ -11,6 +11,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 import java.util.*;
 
 @Getter
@@ -25,6 +27,20 @@ public class User extends SupperEntity implements UserDetails {
 
     @Column
     private String fullName;
+
+    @Column
+    private String email;
+
+    @Column
+    @Pattern(regexp="(^$|[0-9]{10})")
+    @Size(min = 10, max = 11)
+    private String phoneNumber;
+
+    @Column
+    private Date dateOfBirth;
+
+    @Column
+    private String address;
 
     @Column
     private String password;

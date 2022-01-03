@@ -124,4 +124,16 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         return new RestError(HttpStatus.BAD_REQUEST, Arrays.asList(new RestError.ErrorDetail("invoiceNotFoundException", ex.getMessage())));
     }
 
+    @ExceptionHandler(InvoiceDetailAlreadyExistException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public RestError handleInvoiceDetailAlreadyExist(InvoiceDetailAlreadyExistException ex) {
+        return new RestError(HttpStatus.BAD_REQUEST, Arrays.asList(new RestError.ErrorDetail("invoiceDetailAlreadyExistException", ex.getMessage())));
+    }
+
+    @ExceptionHandler(EmailNotExistException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public RestError handleEmailNotExistException(EmailNotExistException ex) {
+        return new RestError(HttpStatus.BAD_REQUEST, Arrays.asList(new RestError.ErrorDetail("emailNotExistException", ex.getMessage())));
+    }
+
 }

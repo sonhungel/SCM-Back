@@ -4,6 +4,7 @@ import com.google.common.collect.Sets;
 import com.scm.backend.model.dto.ResponseDto;
 import com.scm.backend.model.dto.UserDto;
 import com.scm.backend.model.entity.User;
+import com.scm.backend.model.exception.EmailNotExistException;
 import com.scm.backend.model.exception.UsernameAlreadyExistException;
 import com.scm.backend.payload.JWTLoginSuccessResponse;
 import com.scm.backend.payload.LoginRequest;
@@ -49,7 +50,7 @@ public class UserController {
     private AuthenticationManager authenticationManager;
 
     @PostMapping("/register")
-    public ResponseEntity<ResponseDto> registerUser(@Valid @RequestBody UserDto userDto, BindingResult result) throws UsernameAlreadyExistException {
+    public ResponseEntity<ResponseDto> registerUser(@Valid @RequestBody UserDto userDto, BindingResult result) throws UsernameAlreadyExistException, EmailNotExistException {
         userValidator.validate(userDto, result);
 
         ResponseEntity<?> errorMap = mapValidationErrorService.MapValidationService(result);

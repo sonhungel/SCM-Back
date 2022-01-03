@@ -1,6 +1,5 @@
 package com.scm.backend.model.dto;
 
-import com.sun.istack.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -8,10 +7,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = true)
-public class InvoiceDetailDto extends SupperDto{
-    private InvoiceDetailKeyDto key;
-
-    private Long quantity;
-
-    private Double discount;
+public class PermissionDto extends SupperDto {
+    private String name;
+    private String description;
 }

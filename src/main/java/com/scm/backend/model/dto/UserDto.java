@@ -4,7 +4,10 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.persistence.Column;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 import java.util.Date;
 
 @Getter
@@ -20,6 +23,16 @@ public class UserDto extends SupperDto {
 
     @NotBlank
     private String password;
+
+    private String email;
+
+    @Pattern(regexp="(^$|[0-9]{10})")
+    @Size(min = 10, max = 11)
+    private String phoneNumber;
+
+    private Date dateOfBirth;
+
+    private String address;
 
     private String confirmPassword;
 

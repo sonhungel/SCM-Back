@@ -16,13 +16,13 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @SuperBuilder
 @Entity
-public class InvoiceDetail {
+public class UserRole {
     @Column
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @EmbeddedId
-    private InvoiceDetailKey key;
+    private UserRoleKey key;
 
     @Version
     private Integer version;
@@ -32,10 +32,4 @@ public class InvoiceDetail {
 
     @Column
     private LocalDate updateDate;
-
-    @Column(nullable = false)
-    private Long quantity;
-
-    @Column(nullable = true)
-    private Double discount;
 }

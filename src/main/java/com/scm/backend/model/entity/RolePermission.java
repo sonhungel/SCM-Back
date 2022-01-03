@@ -1,6 +1,5 @@
 package com.scm.backend.model.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,13 +15,13 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @SuperBuilder
 @Entity
-public class InvoiceDetail {
+public class RolePermission {
     @Column
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @EmbeddedId
-    private InvoiceDetailKey key;
+    private RolePermissionKey key;
 
     @Version
     private Integer version;
@@ -32,10 +31,4 @@ public class InvoiceDetail {
 
     @Column
     private LocalDate updateDate;
-
-    @Column(nullable = false)
-    private Long quantity;
-
-    @Column(nullable = true)
-    private Double discount;
 }
