@@ -9,6 +9,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.util.Date;
+import java.util.List;
 
 @Getter
 @Setter
@@ -39,4 +40,6 @@ public class UserDto extends SupperDto {
     private Date create_At;
 
     private Date update_At;
+
+    private List<PermissionDto> permissionList;
 }
