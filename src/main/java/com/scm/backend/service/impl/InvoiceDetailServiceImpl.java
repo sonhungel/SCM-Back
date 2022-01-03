@@ -57,6 +57,13 @@ public class InvoiceDetailServiceImpl implements InvoiceDetailService {
         return invoiceDetails;
     }
 
+    @Override
+    public void createAllInvoiceDetail(List<InvoiceDetailDto> invoiceDetailDtoList) throws ItemNumberNotFoundException, InvoiceNotFoundException, InvoiceDetailAlreadyExistException {
+        for(InvoiceDetailDto i : invoiceDetailDtoList){
+            createInvoiceDetail(i);
+        }
+    }
+
     private InvoiceDetail createNewInvoiceDetail(InvoiceDetailDto invoiceDetailDto) throws InvoiceNotFoundException, ItemNumberNotFoundException {
         final Invoice invoice = invoiceRepository.findById(invoiceDetailDto.getKey().getInvoice().getId())
                 .orElseThrow(() -> new InvoiceNotFoundException("Invoice not found", invoiceDetailDto.getKey().getInvoice().getId()));

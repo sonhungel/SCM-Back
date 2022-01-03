@@ -15,6 +15,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 @Service
@@ -40,6 +42,23 @@ public class ItemServiceImpl implements ItemService {
     public Item updateItem(ItemDto itemDto) throws ItemNumberNotFoundException, ConcurrentUpdateItemException, ItemTypeNotFoundException {
         final Item item = checkBeforeUpdate(itemDto);
         return updateItemWithDtoData(item, itemDto);
+    }
+
+    @Override
+    public List<Item> getItemByItemNumber(Integer itemNumber) throws ItemNumberNotFoundException {
+        List<Item> itemList = new ArrayList<>();
+
+        if(itemNumber == null){
+            itemList = itemRepository.findAll();
+            return itemList;
+        }
+
+        Item item = itemRepository.findItemByItemNumber(itemNumber).orElseThrow(()
+                -> new ItemNumberNotFoundException("Item number not found.", itemNumber));
+
+        itemList.add(item);
+
+        return itemList;
     }
 
     private Item updateItemWithDtoData(Item item, ItemDto itemDto) throws ItemTypeNotFoundException {

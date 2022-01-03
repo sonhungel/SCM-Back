@@ -21,12 +21,12 @@ public class InvoiceServiceImpl implements InvoiceService {
     private InvoiceRepository invoiceRepository;
 
     @Override
-    public void createInvoice(InvoiceDto invoiceDto) {
+    public Invoice createInvoice(InvoiceDto invoiceDto) {
         checkBeforeCreate(invoiceDto);
-        createNewInvoiceWithDtoData(invoiceDto);
+        return createNewInvoiceWithDtoData(invoiceDto);
     }
 
-    private void createNewInvoiceWithDtoData(InvoiceDto invoiceDto) throws UsernameNotFoundException {
+    private Invoice createNewInvoiceWithDtoData(InvoiceDto invoiceDto) throws UsernameNotFoundException {
         final String username = invoiceDto.getUser().getUsername();
         User user = userRepository.findUserByUsername(username).orElseThrow(() -> new UsernameNotFoundException("Username not found"));
 
@@ -35,6 +35,8 @@ public class InvoiceServiceImpl implements InvoiceService {
                 .build();
 
         invoiceRepository.saveAndFlush(invoice);
+
+        return invoice;
     }
 
     private void checkBeforeCreate(InvoiceDto invoiceDto) {

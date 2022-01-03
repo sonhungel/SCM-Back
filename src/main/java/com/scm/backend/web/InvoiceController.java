@@ -3,6 +3,7 @@ package com.scm.backend.web;
 import com.scm.backend.model.dto.InvoiceDto;
 import com.scm.backend.model.dto.ResponseDto;
 import com.scm.backend.model.dto.UserInvoiceDto;
+import com.scm.backend.model.entity.Invoice;
 import com.scm.backend.service.InvoiceService;
 import com.scm.backend.service.MapValidationErrorService;
 import com.scm.backend.util.InvoiceDtoMapper;
@@ -42,8 +43,10 @@ public class InvoiceController {
             return new ResponseEntity<>(responseDto, HttpStatus.BAD_REQUEST);
         }
 
-        invoiceService.createInvoice(invoiceDto);
-        ResponseDto responseDto = new ResponseDto("Create invoice successfully", HttpStatus.OK, null);
+        Invoice invoice = invoiceService.createInvoice(invoiceDto);
+        InvoiceDto invoiceData = invoiceDtoMapper.toInvoiceDto(invoice);
+
+        ResponseDto responseDto = new ResponseDto("Create invoice successfully", HttpStatus.OK, invoiceData);
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
     }
 }

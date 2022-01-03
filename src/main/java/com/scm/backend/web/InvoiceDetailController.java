@@ -38,12 +38,12 @@ public class InvoiceDetailController {
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
     }
 
-    /*@PostMapping("/createAllInvoiceDetail")
-    public ResponseEntity<ResponseDto> createAllInvoiceDetail(@Valid @RequestBody List<InvoiceDetailDto> invoiceDetailDto, BindingResult result) throws ItemNumberNotFoundException, InvoiceNotFoundException, InvoiceDetailAlreadyExistException {
-        invoiceDetailService.createInvoiceDetail(invoiceDetailDto);
+    @PostMapping("/createAllInvoiceDetail")
+    public ResponseEntity<ResponseDto> createAllInvoiceDetail(@Valid @RequestBody List<InvoiceDetailDto> invoiceDetailDtoList) throws ItemNumberNotFoundException, InvoiceNotFoundException, InvoiceDetailAlreadyExistException {
+        invoiceDetailService.createAllInvoiceDetail(invoiceDetailDtoList);
         ResponseDto responseDto = new ResponseDto("Create invoice detail successfully", HttpStatus.OK, null);
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
-    }*/
+    }
 
     @GetMapping("/find")
     public ResponseEntity<ResponseDto> findByKey(@Valid @RequestBody InvoiceDetailDto invoiceDetailDto) throws ItemNumberNotFoundException, InvoiceNotFoundException {
