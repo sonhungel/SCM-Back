@@ -6,12 +6,10 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
+import java.util.Date;
 import java.util.Set;
 
 @Getter
@@ -20,9 +18,9 @@ import java.util.Set;
 @AllArgsConstructor
 @SuperBuilder
 @Entity
-public class Supplier extends SupperEntity {
+public class Customer extends SupperEntity {
     @Column(unique = true, nullable = false)
-    private Integer supplierNumber;
+    private Integer customerNumber;
 
     @Column(nullable = false, columnDefinition = "varchar(100)")
     private String name;
@@ -36,10 +34,13 @@ public class Supplier extends SupperEntity {
     private String phoneNumber;
 
     @Column
+    private Date dateOfBirth;
+
+    @Column
     private String taxNumber;
 
     @Column
-    private Long type;
+    private Long sex;
 
     @Column
     private String address;
@@ -59,6 +60,6 @@ public class Supplier extends SupperEntity {
     @Column
     private Long paid = 0L;
 
-    @OneToMany(mappedBy = "supplier", fetch = FetchType.LAZY)
-    private Set<Item> itemSet;
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "customer")
+    private Set<Invoice> invoiceSet;
 }

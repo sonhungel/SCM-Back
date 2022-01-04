@@ -13,5 +13,7 @@ public class InvoiceDetailDto extends SupperDto{
 
     private Long quantity;
 
+    private Long price;
+
     private Double discount;
 }

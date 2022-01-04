@@ -1,22 +1,21 @@
 package com.scm.backend.model.dto;
 
-import com.sun.istack.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.persistence.Column;
 import javax.validation.constraints.Digits;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
+import java.util.Date;
 
 @Getter
 @Setter
 @EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = true)
-public class SupplierDto extends SupperDto {
+public class CustomerDto extends SupperDto {
     @EqualsAndHashCode.Include
     @Digits(integer = 9, fraction = 0)
-    private Integer supplierNumber;
+    private Integer customerNumber;
 
     @Size(min = 1, max = 50)
     private String name;
@@ -27,9 +26,11 @@ public class SupplierDto extends SupperDto {
     @Size(min = 10, max = 11)
     private String phoneNumber;
 
+    private Date dateOfBirth;
+
     private String taxNumber;
 
-    private Long type;
+    private Long sex;
 
     private String address;
 
@@ -41,6 +42,6 @@ public class SupplierDto extends SupperDto {
 
     private String remark;
 
-    // auto
+    //auto
     private Long paid = 0L;
 }

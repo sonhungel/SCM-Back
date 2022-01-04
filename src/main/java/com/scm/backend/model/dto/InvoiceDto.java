@@ -10,4 +10,13 @@ import lombok.Setter;
 @EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = true)
 public class InvoiceDto extends SupperDto {
     private UserInvoiceDto user;
+
+    // cus number
+    private CustomerDto customer;
+
+    //auto set, don't need to add
+    private Long paid;
+
+    //auto set, don't need to add
+    private String status;
 }

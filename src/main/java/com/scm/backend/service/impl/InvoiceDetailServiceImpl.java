@@ -1,13 +1,12 @@
 package com.scm.backend.service.impl;
 
 import com.scm.backend.model.dto.InvoiceDetailDto;
-import com.scm.backend.model.entity.Invoice;
-import com.scm.backend.model.entity.InvoiceDetail;
-import com.scm.backend.model.entity.InvoiceDetailKey;
-import com.scm.backend.model.entity.Item;
+import com.scm.backend.model.dto.InvoiceDto;
+import com.scm.backend.model.entity.*;
 import com.scm.backend.model.exception.InvoiceDetailAlreadyExistException;
 import com.scm.backend.model.exception.InvoiceNotFoundException;
 import com.scm.backend.model.exception.ItemNumberNotFoundException;
+import com.scm.backend.repository.CustomerRepository;
 import com.scm.backend.repository.InvoiceDetailRepository;
 import com.scm.backend.repository.InvoiceRepository;
 import com.scm.backend.repository.ItemRepository;
@@ -28,6 +27,9 @@ public class InvoiceDetailServiceImpl implements InvoiceDetailService {
     private InvoiceRepository invoiceRepository;
 
     @Autowired
+    private CustomerRepository customerRepository;
+
+    @Autowired
     private ItemRepository itemRepository;
 
     @Override
@@ -36,6 +38,24 @@ public class InvoiceDetailServiceImpl implements InvoiceDetailService {
         InvoiceDetail invoiceDetail = createNewInvoiceDetail(invoiceDetailDto);
 
         invoiceDetailRepository.saveAndFlush(invoiceDetail);
+    }
+
+    private void addTotalToInvoice(Long invoiceId, Long totalPaid) throws InvoiceNotFoundException {
+        final Invoice invoice = invoiceRepository.findById(invoiceId)
+                .orElseThrow(() -> new InvoiceNotFoundException("Invoice not found", invoiceId));
+
+        invoice.setPaid(invoice.getPaid() + totalPaid);
+
+        invoice.setStatus("Paid");
+
+        addTotalToCustomer(invoice.getCustomer(), totalPaid);
+
+        invoiceRepository.saveAndFlush(invoice);
+    }
+
+    private void addTotalToCustomer(Customer customer, Long totalPaid) {
+        customer.setPaid(totalPaid);
+        customerRepository.saveAndFlush(customer);
     }
 
     @Override
@@ -58,10 +78,24 @@ public class InvoiceDetailServiceImpl implements InvoiceDetailService {
     }
 
     @Override
-    public void createAllInvoiceDetail(List<InvoiceDetailDto> invoiceDetailDtoList) throws ItemNumberNotFoundException, InvoiceNotFoundException, InvoiceDetailAlreadyExistException {
-        for(InvoiceDetailDto i : invoiceDetailDtoList){
-            createInvoiceDetail(i);
+    public void createAllInvoiceDetail(List<InvoiceDetailDto> invoiceDetailDtoList) throws Exception {
+        if(invoiceDetailDtoList.isEmpty()) {
+            return;
         }
+
+        Long totalPaid = 0L;
+
+        for(InvoiceDetailDto i : invoiceDetailDtoList){
+            if(i.getPrice() == null){
+                throw new Exception("Price of item number " + i.getKey().getItem().getItemNumber() + " could not be NULL");
+            }
+            createInvoiceDetail(i);
+            totalPaid += i.getPrice() * i.getQuantity();
+        }
+
+        Long invoiceId = invoiceDetailDtoList.get(0).getKey().getInvoice().getId();
+
+        addTotalToInvoice(invoiceId, totalPaid);
     }
 
     private InvoiceDetail createNewInvoiceDetail(InvoiceDetailDto invoiceDetailDto) throws InvoiceNotFoundException, ItemNumberNotFoundException {
@@ -87,6 +121,10 @@ public class InvoiceDetailServiceImpl implements InvoiceDetailService {
 
         if(invoiceDetailDto.getQuantity() != null) {
             invoiceDetail.setQuantity(invoiceDetailDto.getQuantity());
+        }
+
+        if(invoiceDetailDto.getPrice() != null) {
+            invoiceDetail.setPrice(invoiceDetailDto.getPrice());
         }
 
         return invoiceDetail;

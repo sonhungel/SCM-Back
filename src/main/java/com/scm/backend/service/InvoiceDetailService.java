@@ -11,5 +11,5 @@ import java.util.List;
 public interface InvoiceDetailService {
     void createInvoiceDetail(InvoiceDetailDto invoiceDetailDto) throws ItemNumberNotFoundException, InvoiceNotFoundException, InvoiceDetailAlreadyExistException;
     List<InvoiceDetail> findByKey(InvoiceDetailDto invoiceDetailDto) throws InvoiceNotFoundException, ItemNumberNotFoundException;
-    void createAllInvoiceDetail(List<InvoiceDetailDto> invoiceDetailDtoList) throws ItemNumberNotFoundException, InvoiceNotFoundException, InvoiceDetailAlreadyExistException;
+    void createAllInvoiceDetail(List<InvoiceDetailDto> invoiceDetailDtoList) throws Exception;
 }

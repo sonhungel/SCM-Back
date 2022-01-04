@@ -32,6 +32,16 @@ public class SupplierServiceImpl implements SupplierService {
         return Supplier.builder()
                 .supplierNumber(supplierDto.getSupplierNumber())
                 .name(supplierDto.getName())
+                .email(supplierDto.getEmail())
+                .phoneNumber(supplierDto.getPhoneNumber())
+                .taxNumber(supplierDto.getTaxNumber())
+                .type(supplierDto.getType())
+                .address(supplierDto.getAddress())
+                .province(supplierDto.getProvince())
+                .ward(supplierDto.getWard())
+                .district(supplierDto.getDistrict())
+                .remark(supplierDto.getRemark())
+                .paid(0L)
                 .build()
                 ;
     }

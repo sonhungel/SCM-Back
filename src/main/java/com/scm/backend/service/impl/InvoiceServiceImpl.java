@@ -1,8 +1,11 @@
 package com.scm.backend.service.impl;
 
 import com.scm.backend.model.dto.InvoiceDto;
+import com.scm.backend.model.entity.Customer;
 import com.scm.backend.model.entity.Invoice;
 import com.scm.backend.model.entity.User;
+import com.scm.backend.model.exception.CustomerNumberNotFoundException;
+import com.scm.backend.repository.CustomerRepository;
 import com.scm.backend.repository.InvoiceRepository;
 import com.scm.backend.repository.UserRepository;
 import com.scm.backend.service.InvoiceService;
@@ -20,18 +23,29 @@ public class InvoiceServiceImpl implements InvoiceService {
     @Autowired
     private InvoiceRepository invoiceRepository;
 
+    @Autowired
+    private CustomerRepository customerRepository;
+
     @Override
-    public Invoice createInvoice(InvoiceDto invoiceDto) {
+    public Invoice createInvoice(InvoiceDto invoiceDto) throws CustomerNumberNotFoundException {
         checkBeforeCreate(invoiceDto);
         return createNewInvoiceWithDtoData(invoiceDto);
     }
 
-    private Invoice createNewInvoiceWithDtoData(InvoiceDto invoiceDto) throws UsernameNotFoundException {
+    private Invoice createNewInvoiceWithDtoData(InvoiceDto invoiceDto) throws UsernameNotFoundException, CustomerNumberNotFoundException {
         final String username = invoiceDto.getUser().getUsername();
         User user = userRepository.findUserByUsername(username).orElseThrow(() -> new UsernameNotFoundException("Username not found"));
 
+        if(invoiceDto.getCustomer().getCustomerNumber() == null){
+            throw new CustomerNumberNotFoundException("Customer number could not be NULL", invoiceDto.getCustomer().getCustomerNumber());
+        }
+        Customer customer = customerRepository.findCustomerByCustomerNumber(invoiceDto.getCustomer().getCustomerNumber())
+                .orElseThrow(() -> new CustomerNumberNotFoundException("Customer not found", invoiceDto.getCustomer().getCustomerNumber()));
+
         Invoice invoice = Invoice.builder()
                 .user(user)
+                .customer(customer)
+                .paid(0L)
                 .build();
 
         invoiceRepository.saveAndFlush(invoice);

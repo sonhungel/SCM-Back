@@ -4,6 +4,7 @@ import com.scm.backend.model.dto.InvoiceDto;
 import com.scm.backend.model.dto.ResponseDto;
 import com.scm.backend.model.dto.UserInvoiceDto;
 import com.scm.backend.model.entity.Invoice;
+import com.scm.backend.model.exception.CustomerNumberNotFoundException;
 import com.scm.backend.service.InvoiceService;
 import com.scm.backend.service.MapValidationErrorService;
 import com.scm.backend.util.InvoiceDtoMapper;
@@ -32,7 +33,7 @@ public class InvoiceController {
     private MapValidationErrorService mapValidationErrorService;
 
     @PostMapping("/create")
-    public ResponseEntity<ResponseDto> createInvoice(@Valid @RequestBody InvoiceDto invoiceDto, BindingResult result, Principal principal){
+    public ResponseEntity<ResponseDto> createInvoice(@Valid @RequestBody InvoiceDto invoiceDto, BindingResult result, Principal principal) throws CustomerNumberNotFoundException {
         UserInvoiceDto userInvoiceDto = new UserInvoiceDto();
         userInvoiceDto.setUsername(principal.getName());
         invoiceDto.setUser(userInvoiceDto);

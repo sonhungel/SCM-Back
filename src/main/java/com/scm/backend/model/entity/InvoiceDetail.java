@@ -33,6 +33,9 @@ public class InvoiceDetail {
     @Column
     private LocalDate updateDate;
 
+    @Column
+    private Long price;
+
     @Column(nullable = false)
     private Long quantity;
 

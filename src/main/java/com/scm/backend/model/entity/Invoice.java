@@ -17,9 +17,20 @@ import java.util.Set;
 @SuperBuilder
 @Entity
 public class Invoice extends SupperEntity {
+    @Column
+    private Long paid = 0L;
+
+    @Column
+    private String status;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(nullable = false, name = "user_id")
     @JsonIgnore
     private User user;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(nullable = false, name = "customer_id")
+    @JsonIgnore
+    private Customer customer;
 
 }

@@ -136,4 +136,16 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         return new RestError(HttpStatus.BAD_REQUEST, Arrays.asList(new RestError.ErrorDetail("emailNotExistException", ex.getMessage())));
     }
 
+    @ExceptionHandler(CustomerNumberAlreadyExistException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public RestError handleCustomerNumberAlreadyExistException(CustomerNumberAlreadyExistException ex) {
+        return new RestError(HttpStatus.BAD_REQUEST, Arrays.asList(new RestError.ErrorDetail("customerNumberAlreadyExistException", ex.getMessage())));
+    }
+
+    @ExceptionHandler(CustomerNumberNotFoundException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public RestError handleCustomerNumberNotFoundException(CustomerNumberNotFoundException ex) {
+        return new RestError(HttpStatus.BAD_REQUEST, Arrays.asList(new RestError.ErrorDetail("customerNumberNotFoundException", ex.getMessage())));
+    }
+
 }
