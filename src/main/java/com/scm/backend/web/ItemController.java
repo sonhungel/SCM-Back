@@ -52,4 +52,9 @@ public class ItemController {
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
     }
 
+    @GetMapping(params = {"searchValue"})
+    public List<ItemDto> finItems(@RequestParam("searchValue") String searchValue){
+        return itemDtoMapper.toListItemDto(itemService.findItemWithQuery(searchValue));
+    }
+
 }

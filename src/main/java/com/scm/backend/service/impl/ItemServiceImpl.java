@@ -61,6 +61,11 @@ public class ItemServiceImpl implements ItemService {
         return itemList;
     }
 
+    @Override
+    public List<Item> findItemWithQuery(String searchString) {
+        return itemRepository.findItemsQuery(searchString);
+    }
+
     private Item updateItemWithDtoData(Item item, ItemDto itemDto) throws ItemTypeNotFoundException {
         final ItemType itemType = itemTypeService.findItemTypeById(itemDto.getItemType().getId())
                 .orElseThrow(() -> new ItemTypeNotFoundException("Item type not found.", itemDto.getItemType().getTypeName()));
