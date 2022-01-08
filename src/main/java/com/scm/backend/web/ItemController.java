@@ -39,9 +39,9 @@ public class ItemController {
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
     }
 
-    @GetMapping("/getItems")
-    public ResponseEntity<ResponseDto> getItemByItemNumber(@Valid @RequestBody GetItemsDto getItemsDto) throws ItemNumberNotFoundException, ConcurrentUpdateItemException, ItemTypeNotFoundException {
-        List<Item> itemList = itemService.getItemByItemNumber(getItemsDto.getItemNumber());
+    @GetMapping("/getItems/{itemNumber}")
+    public ResponseEntity<ResponseDto> getItemByItemNumber(@PathVariable Integer itemNumber) throws ItemNumberNotFoundException, ConcurrentUpdateItemException, ItemTypeNotFoundException {
+        List<Item> itemList = itemService.getItemByItemNumber(itemNumber);
         List<ItemDto> result = new ArrayList<>();
 
         for(Item i : itemList){
