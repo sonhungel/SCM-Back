@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+
 @Service
 @Transactional(rollbackFor = Exception.class)
 public class PermissionServiceImpl implements PermissionService {
@@ -15,6 +17,7 @@ public class PermissionServiceImpl implements PermissionService {
 
     @Override
     public void createPermission(Permission permission) {
+        permission.setAddedDate(LocalDate.now());
         permissionRepository.saveAndFlush(permission);
     }
 }

@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -116,6 +117,7 @@ public class ItemServiceImpl implements ItemService {
                 .supplier(supplier)
                 .description(itemDto.getDescription())
                 .remark(itemDto.getRemark())
+                .addedDate(LocalDate.now())
                 .build()
                 ;
     }

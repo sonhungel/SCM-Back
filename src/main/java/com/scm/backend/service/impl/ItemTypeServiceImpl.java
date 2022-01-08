@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.Optional;
 
 @Service
@@ -36,6 +37,7 @@ public class ItemTypeServiceImpl implements ItemTypeService {
     private ItemType createNewItemType(ItemTypeDto itemTypeDto) {
         return ItemType.builder()
                 .typeName(itemTypeDto.getTypeName())
+                .addedDate(LocalDate.now())
                 .build()
                 ;
     }

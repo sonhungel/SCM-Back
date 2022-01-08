@@ -11,6 +11,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -71,6 +72,7 @@ public class UserServiceImpl implements UserService {
                 .dateOfBirth(userDto.getDateOfBirth())
                 .address(userDto.getAddress())
                 .confirmPassword(userDto.getConfirmPassword())
+                .addedDate(LocalDate.now())
                 .build();
     }
 }

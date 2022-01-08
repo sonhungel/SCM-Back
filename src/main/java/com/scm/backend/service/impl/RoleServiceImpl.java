@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+
 @Service
 @Transactional(rollbackFor = Exception.class)
 public class RoleServiceImpl implements RoleService {
@@ -15,6 +17,7 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     public void createRole(Role role) {
+        role.setAddedDate(LocalDate.now());
         roleRepository.saveAndFlush(role);
     }
 }

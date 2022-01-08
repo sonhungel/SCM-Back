@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -55,6 +56,7 @@ public class CustomerServiceImpl implements CustomerService {
                 .district(customerDto.getDistrict())
                 .remark(customerDto.getRemark())
                 .paid(0L)
+                .addedDate(LocalDate.now())
                 .build()
                 ;
     }

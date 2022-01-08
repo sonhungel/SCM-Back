@@ -14,6 +14,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+
 @Service
 @Transactional(rollbackFor = Exception.class)
 public class InvoiceServiceImpl implements InvoiceService {
@@ -46,6 +48,7 @@ public class InvoiceServiceImpl implements InvoiceService {
                 .user(user)
                 .customer(customer)
                 .paid(0L)
+                .addedDate(LocalDate.now())
                 .build();
 
         invoiceRepository.saveAndFlush(invoice);

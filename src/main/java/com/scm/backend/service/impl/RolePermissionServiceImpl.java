@@ -13,6 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+
 @Service
 @Transactional(rollbackFor = Exception.class)
 public class RolePermissionServiceImpl implements RolePermissionService {
@@ -40,6 +42,7 @@ public class RolePermissionServiceImpl implements RolePermissionService {
 
         RolePermission rolePermission = RolePermission.builder()
                 .key(key)
+                .addedDate(LocalDate.now())
                 .build()
                 ;
 
