@@ -46,20 +46,10 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public List<Item> getItemByItemNumber(Integer itemNumber) throws ItemNumberNotFoundException {
-        List<Item> itemList = new ArrayList<>();
+    public Item getItemByItemNumber(Integer itemNumber) throws ItemNumberNotFoundException {
 
-        if(itemNumber == null){
-            itemList = itemRepository.findAll();
-            return itemList;
-        }
-
-        Item item = itemRepository.findItemByItemNumber(itemNumber).orElseThrow(()
+        return itemRepository.findItemByItemNumber(itemNumber).orElseThrow(()
                 -> new ItemNumberNotFoundException("Item number not found.", itemNumber));
-
-        itemList.add(item);
-
-        return itemList;
     }
 
     @Override

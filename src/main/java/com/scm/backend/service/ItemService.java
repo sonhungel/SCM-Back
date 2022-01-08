@@ -9,7 +9,7 @@ import java.util.List;
 public interface ItemService {
     void createItem(ItemDto itemDto) throws ItemNumberAlreadyExistException, ItemNumberLessThanOne, ItemTypeNotFoundException, SupplierNotFoundException;
     Item updateItem(ItemDto itemDto) throws ItemNumberNotFoundException, ConcurrentUpdateItemException, ItemTypeNotFoundException;
-    List<Item> getItemByItemNumber(Integer itemNumber) throws ItemNumberNotFoundException;
+    Item getItemByItemNumber(Integer itemNumber) throws ItemNumberNotFoundException;
     List<Item> findItemWithQuery(String searchString);
 
 }
