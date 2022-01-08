@@ -148,4 +148,10 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         return new RestError(HttpStatus.BAD_REQUEST, Arrays.asList(new RestError.ErrorDetail("customerNumberNotFoundException", ex.getMessage())));
     }
 
+    @ExceptionHandler(ConcurrentUpdateException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public RestError handleConcurrentUpdateException(ConcurrentUpdateException ex) {
+        return new RestError(HttpStatus.BAD_REQUEST, Arrays.asList(new RestError.ErrorDetail("concurrentUpdateException", ex.getMessage())));
+    }
+
 }

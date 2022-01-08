@@ -9,6 +9,7 @@ import lombok.experimental.SuperBuilder;
 import javax.persistence.*;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.Set;
 
@@ -59,6 +60,9 @@ public class Customer extends SupperEntity {
 
     @Column
     private Long paid = 0L;
+
+    @Column
+    private LocalDate latestBuy;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "customer")
     private Set<Invoice> invoiceSet;

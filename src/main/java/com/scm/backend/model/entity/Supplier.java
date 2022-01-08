@@ -12,6 +12,7 @@ import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
+import java.time.LocalDate;
 import java.util.Set;
 
 @Getter
@@ -58,6 +59,9 @@ public class Supplier extends SupperEntity {
 
     @Column
     private Long paid = 0L;
+
+    @Column
+    private LocalDate latestSupply;
 
     @OneToMany(mappedBy = "supplier", fetch = FetchType.LAZY)
     private Set<Item> itemSet;

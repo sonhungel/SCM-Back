@@ -24,7 +24,7 @@ public class Item extends SupperEntity {
     @Column(nullable = false, columnDefinition = "varchar(50)")
     private String name;
 
-    @Column(nullable = false, length = 3)
+    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private ItemState state;
 

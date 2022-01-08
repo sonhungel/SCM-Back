@@ -14,4 +14,6 @@ public class ItemTypeDto extends SupperDto {
     @NotNull
     @Size(min = 1, max = 100)
     private String typeName;
+
+    private String description;
 }
