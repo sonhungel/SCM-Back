@@ -35,6 +35,12 @@ public class UserDto extends SupperDto {
 
     private String address;
 
+    private String province;
+
+    private String ward;
+
+    private String district;
+
     private String confirmPassword;
 
     private Date create_At;
@@ -42,4 +48,7 @@ public class UserDto extends SupperDto {
     private Date update_At;
 
     private List<PermissionDto> permissionList;
+
+    // first permission
+    private String role;
 }

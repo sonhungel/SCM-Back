@@ -21,7 +21,7 @@ public class Item extends SupperEntity {
     @Column(unique = true, nullable = false)
     private Integer itemNumber;
 
-    @Column(nullable = false, columnDefinition = "varchar(50)")
+    @Column(nullable = false, columnDefinition = "nvarchar(255)")
     private String name;
 
     @Column(nullable = false)
@@ -45,10 +45,10 @@ public class Item extends SupperEntity {
     @Column(nullable = false)
     private Long cost;
 
-    @Column(nullable = true)
+    @Column(nullable = true, columnDefinition = "nvarchar(255)")
     private String description;
 
-    @Column(nullable = true)
+    @Column(nullable = true, columnDefinition = "nvarchar(255)")
     private String remark;
 
     @ManyToOne(fetch = FetchType.LAZY)

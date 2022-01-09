@@ -25,7 +25,7 @@ public class Supplier extends SupperEntity {
     @Column(unique = true, nullable = false)
     private Integer supplierNumber;
 
-    @Column(nullable = false, columnDefinition = "varchar(100)")
+    @Column(nullable = false, columnDefinition = "nvarchar(255)")
     private String name;
 
     @Column
@@ -42,7 +42,7 @@ public class Supplier extends SupperEntity {
     @Column
     private Long type;
 
-    @Column
+    @Column(columnDefinition = "nvarchar(255)")
     private String address;
 
     @Column
@@ -54,7 +54,7 @@ public class Supplier extends SupperEntity {
     @Column
     private String district;
 
-    @Column
+    @Column(columnDefinition = "nvarchar(255)")
     private String remark;
 
     @Column

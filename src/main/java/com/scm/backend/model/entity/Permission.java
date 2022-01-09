@@ -16,9 +16,9 @@ import javax.persistence.Entity;
 @SuperBuilder
 @Entity
 public class Permission extends SupperEntity {
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "nvarchar(255)")
     private String name;
 
-    @Column
+    @Column(columnDefinition = "nvarchar(255)")
     private String description;
 }

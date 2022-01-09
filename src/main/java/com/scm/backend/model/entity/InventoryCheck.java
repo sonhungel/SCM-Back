@@ -16,7 +16,7 @@ import javax.persistence.*;
 @SuperBuilder
 @Entity
 public class InventoryCheck extends SupperEntity {
-    @Column
+    @Column(columnDefinition = "nvarchar(255)")
     private String remark;
 
     @Column

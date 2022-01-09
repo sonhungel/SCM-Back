@@ -78,6 +78,9 @@ public class UserServiceImpl implements UserService {
                 .phoneNumber(userDto.getPhoneNumber())
                 .dateOfBirth(userDto.getDateOfBirth())
                 .address(userDto.getAddress())
+                .province(userDto.getProvince())
+                .district(userDto.getDistrict())
+                .ward(userDto.getWard())
                 .confirmPassword(userDto.getConfirmPassword())
                 .addedDate(LocalDate.now())
                 .build();

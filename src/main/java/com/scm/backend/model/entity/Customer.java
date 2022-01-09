@@ -23,7 +23,7 @@ public class Customer extends SupperEntity {
     @Column(unique = true, nullable = false)
     private Integer customerNumber;
 
-    @Column(nullable = false, columnDefinition = "varchar(100)")
+    @Column(nullable = false, columnDefinition = "nvarchar(255)")
     private String name;
 
     @Column
@@ -43,7 +43,7 @@ public class Customer extends SupperEntity {
     @Column
     private Long sex;
 
-    @Column
+    @Column(columnDefinition = "nvarchar(255)")
     private String address;
 
     @Column
@@ -55,7 +55,7 @@ public class Customer extends SupperEntity {
     @Column
     private String district;
 
-    @Column
+    @Column(columnDefinition = "nvarchar(255)")
     private String remark;
 
     @Column

@@ -25,7 +25,7 @@ public class User extends SupperEntity implements UserDetails {
     @Column(unique = true)
     private String username;
 
-    @Column
+    @Column(columnDefinition = "nvarchar(255)")
     private String fullName;
 
     @Column
@@ -39,8 +39,17 @@ public class User extends SupperEntity implements UserDetails {
     @Column
     private Date dateOfBirth;
 
-    @Column
+    @Column(columnDefinition = "nvarchar(255)")
     private String address;
+
+    @Column
+    private String province;
+
+    @Column
+    private String ward;
+
+    @Column
+    private String district;
 
     @Column
     private String password;

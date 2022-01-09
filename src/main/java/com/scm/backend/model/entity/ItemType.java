@@ -17,10 +17,10 @@ import java.util.Set;
 @SuperBuilder
 @Entity
 public class ItemType extends SupperEntity {
-    @Column(nullable = false, columnDefinition = "varchar(100)")
+    @Column(nullable = false, columnDefinition = "nvarchar(255)")
     private String typeName;
 
-    @Column
+    @Column(columnDefinition = "nvarchar(255)")
     private String description;
 
     @Column(nullable = false)

@@ -3,6 +3,8 @@ package com.scm.backend.web;
 import com.google.common.collect.Sets;
 import com.scm.backend.model.dto.ResponseDto;
 import com.scm.backend.model.dto.UserDto;
+import com.scm.backend.model.dto.UserInvoiceDto;
+import com.scm.backend.model.entity.Permission;
 import com.scm.backend.model.entity.User;
 import com.scm.backend.model.exception.EmailNotExistException;
 import com.scm.backend.model.exception.UsernameAlreadyExistException;
@@ -10,9 +12,11 @@ import com.scm.backend.payload.JWTLoginSuccessResponse;
 import com.scm.backend.payload.LoginRequest;
 import com.scm.backend.security.JwtTokenProvider;
 import com.scm.backend.service.MapValidationErrorService;
+import com.scm.backend.service.UserRoleService;
 import com.scm.backend.service.UserService;
 import com.scm.backend.util.UserDtoMapper;
 import com.scm.backend.validator.UserDtoValidator;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -35,6 +39,9 @@ import static com.scm.backend.security.SecurityConstants.TOKEN_PREFIX;
 public class UserController {
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private UserRoleService userRoleService;
 
     @Autowired
     private UserDtoMapper userDtoMapper;
@@ -70,8 +77,21 @@ public class UserController {
     @GetMapping("/{username}")
     public ResponseEntity<ResponseDto> getUserByUsername(@PathVariable("username") String username) throws UsernameNotFoundException{
         User user = userService.findUserByUsername(username).orElseThrow(() -> new UsernameNotFoundException("Can not found username: " + username));
+        UserDto userDto = userDtoMapper.toUserDto(user);
+
+        UserInvoiceDto userInvoiceDto = new UserInvoiceDto();
+        userInvoiceDto.setUsername(username);
+
+        List<Permission> permissionList = userRoleService.getUserPermission(userInvoiceDto);
+
+        if(StringUtils.isNotBlank(permissionList.get(0).getName())){
+            userDto.setRole(permissionList.get(0).getName());
+        } else {
+            userDto.setRole("Not have role");
+        }
+
         ResponseDto responseDto = new ResponseDto("Get user successfully",
-                HttpStatus.CREATED, userDtoMapper.toUserDto(user));
+                HttpStatus.CREATED, userDto);
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
     }
 
