@@ -57,6 +57,7 @@ public class InvoiceDetailServiceImpl implements InvoiceDetailService {
 
     private void addTotalToCustomer(Customer customer, Long totalPaid) {
         customer.setPaid(totalPaid);
+        customer.setLatestBuy(LocalDate.now());
         customerRepository.saveAndFlush(customer);
     }
 

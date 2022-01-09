@@ -14,6 +14,7 @@ import com.scm.backend.security.JwtTokenProvider;
 import com.scm.backend.service.MapValidationErrorService;
 import com.scm.backend.service.UserRoleService;
 import com.scm.backend.service.UserService;
+import com.scm.backend.util.RoleDtoMapper;
 import com.scm.backend.util.UserDtoMapper;
 import com.scm.backend.validator.UserDtoValidator;
 import org.apache.commons.lang3.StringUtils;
@@ -45,6 +46,9 @@ public class UserController {
 
     @Autowired
     private UserDtoMapper userDtoMapper;
+
+    @Autowired
+    private RoleDtoMapper roleDtoMapper;
 
     @Autowired
     private MapValidationErrorService mapValidationErrorService;
@@ -98,8 +102,16 @@ public class UserController {
     @GetMapping("/getAllUser")
     public ResponseEntity<ResponseDto> getAllUser() {
         List<User> userList = userService.getAllUser();
+        List<UserDto> userDtoList = userDtoMapper.toListUserDto(userList);
+        for(UserDto e : userDtoList){
+            if(!e.getUserRoleList().isEmpty() && StringUtils.isNotBlank(e.getUserRoleList().get(0).getKey().getRole().getName())){
+                e.setRole(e.getUserRoleList().get(0).getKey().getRole().getName());
+            } else {
+                e.setRole("Not have role");
+            }
+        }
         ResponseDto responseDto = new ResponseDto("Get user successfully",
-                HttpStatus.CREATED, userDtoMapper.toListUserDto(userList));
+                HttpStatus.CREATED, userDtoList);
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
     }
 

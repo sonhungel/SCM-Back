@@ -10,7 +10,7 @@ import org.apache.commons.lang3.ObjectUtils;
 
 import java.util.List;
 
-public class ItemRepositoryCustomImpl extends SupperRepositoryCustom implements ItemRepositoryCustom{
+public class ItemRepositoryCustomImpl extends SupperRepositoryCustom implements ItemRepositoryCustom {
     @Override
     public List<Item> findItemsQuery(String condition) {
         QItem item = QItem.item;

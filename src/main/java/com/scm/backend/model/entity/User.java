@@ -69,6 +69,9 @@ public class User extends SupperEntity implements UserDetails {
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "user")
     private Set<InventoryCheck> inventoryCheckSet;
 
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "key.user", fetch = FetchType.LAZY)
+    private List<UserRole> userRoleList;
+
     @PrePersist
     protected void onCreate(){
         this.create_At = new Date();

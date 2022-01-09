@@ -6,8 +6,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
+import javax.persistence.*;
+import java.util.List;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -21,4 +22,7 @@ public class Role extends SupperEntity {
 
     @Column(columnDefinition = "nvarchar(255)")
     private String description;
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "key.role", fetch = FetchType.LAZY)
+    private List<RolePermission> rolePermissionList;
 }
