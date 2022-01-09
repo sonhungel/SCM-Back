@@ -56,7 +56,7 @@ public class InvoiceDetailServiceImpl implements InvoiceDetailService {
     }
 
     private void addTotalToCustomer(Customer customer, Long totalPaid) {
-        customer.setPaid(totalPaid);
+        customer.setPaid(customer.getPaid() + totalPaid);
         customer.setLatestBuy(LocalDate.now());
         customerRepository.saveAndFlush(customer);
     }
@@ -130,6 +130,12 @@ public class InvoiceDetailServiceImpl implements InvoiceDetailService {
         if(invoiceDetailDto.getPrice() != null) {
             invoiceDetail.setPrice(invoiceDetailDto.getPrice());
         }
+
+        invoiceDetailRepository.saveAndFlush(invoiceDetail);
+
+        Long availableQuantity = item.getAvailableQuantity() - invoiceDetailDto.getQuantity();
+        item.setAvailableQuantity(availableQuantity);
+        itemRepository.save(item);
 
         return invoiceDetail;
     }

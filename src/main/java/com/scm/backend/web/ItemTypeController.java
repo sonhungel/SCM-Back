@@ -38,9 +38,11 @@ public class ItemTypeController {
 
     @GetMapping("/getNewId")
     public ResponseEntity<ResponseDto> getItemTypeId() {
-        Long itemTypeId = itemTypeService.getNewItemTypeId();
+        ItemType itemType = itemTypeService.getNewItemTypeId();
 
-        ResponseDto responseDto = new ResponseDto("Get successfully", HttpStatus.OK, itemTypeId);
+        ItemTypeDto itemTypeDto = itemTypeDtoMapper.toItemTypeDto(itemType);
+
+        ResponseDto responseDto = new ResponseDto("Get successfully", HttpStatus.OK, itemTypeDto);
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
     }
 

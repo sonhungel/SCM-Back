@@ -12,6 +12,6 @@ import java.util.Optional;
 public interface ItemTypeService {
     Optional<ItemType> findItemTypeById(Long itemTypeId);
     ItemType createItemType(ItemTypeDto itemTypeDto) throws ConcurrentUpdateException, ItemTypeNotFoundException;
-    Long getNewItemTypeId();
+    ItemType getNewItemTypeId();
     List<ItemType> getAllActiveItemType();
 }

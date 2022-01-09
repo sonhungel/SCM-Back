@@ -35,11 +35,11 @@ public class ItemTypeServiceImpl implements ItemTypeService {
     }
 
     @Override
-    public Long getNewItemTypeId() {
+    public ItemType getNewItemTypeId() {
         ItemType itemType = createNewItemType();
         itemTypeRepository.saveAndFlush(itemType);
 
-        return itemType.getId();
+        return itemType;
     }
 
     @Override

@@ -31,12 +31,12 @@ public class InvoiceDetailController {
     @Autowired
     private InvoiceDetailDtoMapper invoiceDetailDtoMapper;
 
-    @PostMapping("/create")
+    /*@PostMapping("/create")
     public ResponseEntity<ResponseDto> createInvoiceDetail(@Valid @RequestBody InvoiceDetailDto invoiceDetailDto, BindingResult result) throws ItemNumberNotFoundException, InvoiceNotFoundException, InvoiceDetailAlreadyExistException {
         invoiceDetailService.createInvoiceDetail(invoiceDetailDto);
         ResponseDto responseDto = new ResponseDto("Create invoice detail successfully", HttpStatus.OK, null);
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
-    }
+    }*/
 
     @PostMapping("/createAllInvoiceDetail")
     public ResponseEntity<ResponseDto> createAllInvoiceDetail(@Valid @RequestBody List<InvoiceDetailDto> invoiceDetailDtoList) throws Exception {
