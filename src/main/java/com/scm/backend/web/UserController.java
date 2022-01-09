@@ -26,6 +26,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
+import java.util.List;
+
 import static com.scm.backend.security.SecurityConstants.TOKEN_PREFIX;
 
 @RestController
@@ -59,16 +61,26 @@ public class UserController {
             return new ResponseEntity<>(responseDto, HttpStatus.BAD_REQUEST);
         }
 
-        userService.saveUser(userDto);
+        User user = userService.saveUser(userDto);
 
-        ResponseDto responseDto = new ResponseDto("Create successfully", HttpStatus.CREATED, null);
+        ResponseDto responseDto = new ResponseDto("Create successfully", HttpStatus.CREATED, userDtoMapper.toUserDto(user));
         return new ResponseEntity<>(responseDto, HttpStatus.CREATED);
     }
 
     @GetMapping("/{username}")
-    public UserDto getUserByUsername(@PathVariable("username") String username) throws UsernameNotFoundException{
+    public ResponseEntity<ResponseDto> getUserByUsername(@PathVariable("username") String username) throws UsernameNotFoundException{
         User user = userService.findUserByUsername(username).orElseThrow(() -> new UsernameNotFoundException("Can not found username: " + username));
-        return userDtoMapper.toUserDto(user);
+        ResponseDto responseDto = new ResponseDto("Get user successfully",
+                HttpStatus.CREATED, userDtoMapper.toUserDto(user));
+        return new ResponseEntity<>(responseDto, HttpStatus.OK);
+    }
+
+    @GetMapping("/getAllUser")
+    public ResponseEntity<ResponseDto> getAllUser() {
+        List<User> userList = userService.getAllUser();
+        ResponseDto responseDto = new ResponseDto("Get user successfully",
+                HttpStatus.CREATED, userDtoMapper.toListUserDto(userList));
+        return new ResponseEntity<>(responseDto, HttpStatus.OK);
     }
 
     @PostMapping("/login")

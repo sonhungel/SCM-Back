@@ -1,6 +1,7 @@
 package com.scm.backend.model.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.scm.backend.util.InvoiceState;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -21,7 +22,8 @@ public class Invoice extends SupperEntity {
     private Long paid = 0L;
 
     @Column
-    private String status;
+    @Enumerated(EnumType.STRING)
+    private InvoiceState status;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(nullable = false, name = "user_id")

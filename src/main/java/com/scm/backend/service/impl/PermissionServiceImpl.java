@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Service
 @Transactional(rollbackFor = Exception.class)
@@ -19,5 +20,10 @@ public class PermissionServiceImpl implements PermissionService {
     public void createPermission(Permission permission) {
         permission.setAddedDate(LocalDate.now());
         permissionRepository.saveAndFlush(permission);
+    }
+
+    @Override
+    public List<Permission> getAllPermission() {
+        return permissionRepository.findAll();
     }
 }

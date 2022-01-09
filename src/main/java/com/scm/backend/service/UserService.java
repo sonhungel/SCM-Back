@@ -5,9 +5,11 @@ import com.scm.backend.model.entity.User;
 import com.scm.backend.model.exception.EmailNotExistException;
 import com.scm.backend.model.exception.UsernameAlreadyExistException;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface UserService {
-    void saveUser(UserDto userDto) throws UsernameAlreadyExistException, EmailNotExistException;
+    User saveUser(UserDto userDto) throws UsernameAlreadyExistException, EmailNotExistException;
     Optional<User> findUserByUsername(String username);
+    List<User> getAllUser();
 }

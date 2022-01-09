@@ -1,5 +1,6 @@
 package com.scm.backend.model.dto;
 
+import com.scm.backend.util.InvoiceState;
 import com.sun.istack.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -18,5 +19,5 @@ public class InvoiceDto extends SupperDto {
     private Long paid;
 
     //auto set, don't need to add
-    private String status;
+    private InvoiceState status;
 }

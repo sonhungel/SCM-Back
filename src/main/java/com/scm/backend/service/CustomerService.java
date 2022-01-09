@@ -9,6 +9,6 @@ import com.scm.backend.model.exception.SupplierNumberAlreadyExist;
 import java.util.List;
 
 public interface CustomerService {
-    void createCustomer(CustomerDto customerDto) throws CustomerNumberAlreadyExistException;
+    Customer createCustomer(CustomerDto customerDto) throws CustomerNumberAlreadyExistException;
     List<Customer> getCustomers();
 }

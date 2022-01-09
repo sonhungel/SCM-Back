@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -28,7 +29,7 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder;
 
-    public void saveUser(UserDto userDto) throws UsernameAlreadyExistException, EmailNotExistException {
+    public User saveUser(UserDto userDto) throws UsernameAlreadyExistException, EmailNotExistException {
         checkBeforeCreateUser(userDto);
 
         userDto.setPassword(bCryptPasswordEncoder.encode(userDto.getPassword()));
@@ -41,11 +42,17 @@ public class UserServiceImpl implements UserService {
         // Make sure that password and confirmPassword match
         // We don't persist or show the confirmPassword
         userRepository.save(user);
+        return user;
     }
 
     @Override
     public Optional<User> findUserByUsername(String username) {
         return userRepository.findUserByUsername(username);
+    }
+
+    @Override
+    public List<User> getAllUser() {
+        return userRepository.findAll();
     }
 
     private void checkBeforeCreateUser(UserDto userDto) throws UsernameAlreadyExistException, EmailNotExistException {

@@ -42,8 +42,8 @@ public class InventoryCheckController {
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
     }
 
-    @GetMapping
-    public ResponseEntity<ResponseDto> getInventoryChecks() {
+    @GetMapping("/getAllInventoryCheck")
+    public ResponseEntity<ResponseDto> getAllInventoryCheck() {
         List<InventoryCheck> inventoryCheckList = inventoryCheckService.getInventoryChecks();
 
         List<InventoryCheckDto> inventoryCheckDtoList = inventoryCheckDtoMapper.toInventoryCheckDtoList(inventoryCheckList);

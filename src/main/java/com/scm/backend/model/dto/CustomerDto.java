@@ -7,6 +7,7 @@ import lombok.Setter;
 import javax.validation.constraints.Digits;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
+import java.time.LocalDate;
 import java.util.Date;
 
 @Getter
@@ -44,4 +45,6 @@ public class CustomerDto extends SupperDto {
 
     //auto
     private Long paid = 0L;
+
+    private LocalDate latestBuy;
 }

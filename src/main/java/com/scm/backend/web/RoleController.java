@@ -4,6 +4,7 @@ import com.scm.backend.model.dto.*;
 import com.scm.backend.model.entity.*;
 import com.scm.backend.service.*;
 import com.scm.backend.util.PermissionDtoMapper;
+import com.scm.backend.util.RoleDtoMapper;
 import com.scm.backend.util.UserDtoMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -39,6 +40,9 @@ public class RoleController {
 
     @Autowired
     private UserDtoMapper userDtoMapper;
+
+    @Autowired
+    private RoleDtoMapper roleDtoMapper;
 
     @PostMapping("/createRole")
     public ResponseEntity<ResponseDto> createRole(@Valid @RequestBody Role role) {
@@ -86,6 +90,26 @@ public class RoleController {
 
         userDto.setPermissionList(permissionDtoList);
         ResponseDto responseDto = new ResponseDto("successfully", HttpStatus.OK, userDto);
+        return new ResponseEntity<>(responseDto, HttpStatus.OK);
+    }
+
+    @GetMapping("/getAllPermission")
+    public ResponseEntity<ResponseDto> getAllPermission() {
+        List<Permission> permissionList = permissionService.getAllPermission();
+
+        List<PermissionDto> permissionDtoList = permissionDtoMapper.toPermissionDtoList(permissionList);
+
+        ResponseDto responseDto = new ResponseDto("Get permission list successfully", HttpStatus.OK, permissionDtoList);
+        return new ResponseEntity<>(responseDto, HttpStatus.OK);
+    }
+
+    @GetMapping("/getAllRole")
+    public ResponseEntity<ResponseDto> getAllRole() {
+        List<Role> roleList = roleService.getAllRole();
+
+        List<RoleDto> roleDtoList = roleDtoMapper.toRoleDtoList(roleList);
+
+        ResponseDto responseDto = new ResponseDto("Get role list successfully", HttpStatus.OK, roleDtoList);
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
     }
 }

@@ -11,6 +11,7 @@ import com.scm.backend.repository.InvoiceDetailRepository;
 import com.scm.backend.repository.InvoiceRepository;
 import com.scm.backend.repository.ItemRepository;
 import com.scm.backend.service.InvoiceDetailService;
+import com.scm.backend.util.InvoiceState;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -47,7 +48,7 @@ public class InvoiceDetailServiceImpl implements InvoiceDetailService {
 
         invoice.setPaid(invoice.getPaid() + totalPaid);
 
-        invoice.setStatus("Paid");
+        invoice.setStatus(InvoiceState.CLOSED);
 
         addTotalToCustomer(invoice.getCustomer(), totalPaid);
 

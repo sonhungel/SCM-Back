@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Service
 @Transactional(rollbackFor = Exception.class)
@@ -19,5 +20,10 @@ public class RoleServiceImpl implements RoleService {
     public void createRole(Role role) {
         role.setAddedDate(LocalDate.now());
         roleRepository.saveAndFlush(role);
+    }
+
+    @Override
+    public List<Role> getAllRole() {
+        return roleRepository.findAll();
     }
 }

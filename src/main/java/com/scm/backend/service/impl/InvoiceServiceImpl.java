@@ -9,12 +9,14 @@ import com.scm.backend.repository.CustomerRepository;
 import com.scm.backend.repository.InvoiceRepository;
 import com.scm.backend.repository.UserRepository;
 import com.scm.backend.service.InvoiceService;
+import com.scm.backend.util.InvoiceState;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Service
 @Transactional(rollbackFor = Exception.class)
@@ -34,6 +36,11 @@ public class InvoiceServiceImpl implements InvoiceService {
         return createNewInvoiceWithDtoData(invoiceDto);
     }
 
+    @Override
+    public List<Invoice> getAllInvoice() {
+        return invoiceRepository.findAll();
+    }
+
     private Invoice createNewInvoiceWithDtoData(InvoiceDto invoiceDto) throws UsernameNotFoundException, CustomerNumberNotFoundException {
         final String username = invoiceDto.getUser().getUsername();
         User user = userRepository.findUserByUsername(username).orElseThrow(() -> new UsernameNotFoundException("Username not found"));
@@ -48,6 +55,7 @@ public class InvoiceServiceImpl implements InvoiceService {
                 .user(user)
                 .customer(customer)
                 .paid(0L)
+                .status(InvoiceState.OPEN)
                 .addedDate(LocalDate.now())
                 .build();
 

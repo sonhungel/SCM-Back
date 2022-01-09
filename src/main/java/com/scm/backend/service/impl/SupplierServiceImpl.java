@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Service
 @Transactional(rollbackFor = Exception.class)
@@ -18,15 +19,22 @@ public class SupplierServiceImpl implements SupplierService {
     private SupplierRepository supplierRepository;
 
     @Override
-    public void createSupplier(SupplierDto supplierDto) throws SupplierNumberAlreadyExist {
+    public Supplier createSupplier(SupplierDto supplierDto) throws SupplierNumberAlreadyExist {
         checkBeforeCreate(supplierDto);
-        createNewItemWithDtoData(supplierDto);
+        return createNewItemWithDtoData(supplierDto);
     }
 
-    private void createNewItemWithDtoData(SupplierDto supplierDto) {
+    @Override
+    public List<Supplier> getAllSupplier() {
+        return supplierRepository.findAll();
+    }
+
+    private Supplier createNewItemWithDtoData(SupplierDto supplierDto) {
         Supplier supplier = createNewSupplier(supplierDto);
 
         supplierRepository.saveAndFlush(supplier);
+
+        return supplier;
     }
 
     private Supplier createNewSupplier(SupplierDto supplierDto) {

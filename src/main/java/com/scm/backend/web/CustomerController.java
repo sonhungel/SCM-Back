@@ -30,21 +30,20 @@ public class CustomerController {
 
     @PostMapping
     public ResponseEntity<ResponseDto> createCustomer(@Valid @RequestBody CustomerDto customerDto) throws CustomerNumberAlreadyExistException {
-        customerService.createCustomer(customerDto);
-        ResponseDto responseDto = new ResponseDto("Create successfully", HttpStatus.OK, null);
+        Customer customer = customerService.createCustomer(customerDto);
+        CustomerDto customerDto1 = customerDtoMapper.toCustomerDto(customer);
+
+        ResponseDto responseDto = new ResponseDto("Create successfully", HttpStatus.OK, customerDto1);
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
     }
 
-    @GetMapping
-    public ResponseEntity<ResponseDto> getCustomers() {
-        List<CustomerDto> customerDtoList = new ArrayList<>();
+    @GetMapping("/getAllCustomer")
+    public ResponseEntity<ResponseDto> getAllCustomer() {
         List<Customer> customerList = customerService.getCustomers();
 
-        for(Customer c : customerList){
-            customerDtoList.add(customerDtoMapper.toCustomerDto(c));
-        }
+        List<CustomerDto> customerDtoList = customerDtoMapper.toCustomerDtoList(customerList);
 
-        ResponseDto responseDto = new ResponseDto("Create successfully", HttpStatus.OK, customerDtoList);
+        ResponseDto responseDto = new ResponseDto("Get successfully", HttpStatus.OK, customerDtoList);
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
     }
 }

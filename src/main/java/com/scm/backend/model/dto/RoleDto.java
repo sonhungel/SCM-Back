@@ -8,4 +8,6 @@ import lombok.Setter;
 @Setter
 @EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = true)
 public class RoleDto extends SupperDto {
+    private String name;
+    private String description;
 }

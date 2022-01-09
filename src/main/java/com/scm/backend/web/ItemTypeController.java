@@ -44,7 +44,7 @@ public class ItemTypeController {
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
     }
 
-    @GetMapping("getActiveItemType")
+    @GetMapping("/getActiveItemType")
     public ResponseEntity<ResponseDto> getActiveItemTypes() {
         List<ItemType> itemTypes = itemTypeService.getAllActiveItemType();
 

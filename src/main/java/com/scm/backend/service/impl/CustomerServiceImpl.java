@@ -25,9 +25,9 @@ public class CustomerServiceImpl implements CustomerService {
     private CustomerDtoMapper customerDtoMapper;
 
     @Override
-    public void createCustomer(CustomerDto customerDto) throws CustomerNumberAlreadyExistException {
+    public Customer createCustomer(CustomerDto customerDto) throws CustomerNumberAlreadyExistException {
         checkBeforeCreate(customerDto);
-        createNewWithDtoData(customerDto);
+        return createNewWithDtoData(customerDto);
     }
 
     @Override
@@ -35,10 +35,11 @@ public class CustomerServiceImpl implements CustomerService {
         return customerRepository.findAll();
     }
 
-    private void createNewWithDtoData(CustomerDto customerDto) {
+    private Customer createNewWithDtoData(CustomerDto customerDto) {
         Customer customer = createNewCustomer(customerDto);
 
         customerRepository.saveAndFlush(customer);
+        return customer;
     }
 
     private Customer createNewCustomer(CustomerDto customerDto) {

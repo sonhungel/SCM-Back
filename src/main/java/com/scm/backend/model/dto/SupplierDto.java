@@ -9,6 +9,7 @@ import javax.persistence.Column;
 import javax.validation.constraints.Digits;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
+import java.time.LocalDate;
 
 @Getter
 @Setter
@@ -43,4 +44,6 @@ public class SupplierDto extends SupperDto {
 
     // auto
     private Long paid = 0L;
+
+    private LocalDate latestSupply;
 }
