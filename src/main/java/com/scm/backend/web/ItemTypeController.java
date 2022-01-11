@@ -30,7 +30,8 @@ public class ItemTypeController {
     private ItemTypeDtoMapper itemTypeDtoMapper;
 
     @PostMapping
-    public ResponseEntity<ResponseDto> createItemType(@Valid @RequestBody ItemTypeDto itemTypeDto) throws ConcurrentUpdateException, ItemTypeNotFoundException {
+    public ResponseEntity<ResponseDto> createItemType(@Valid @RequestBody ItemTypeDto itemTypeDto)
+            throws ConcurrentUpdateException, ItemTypeNotFoundException {
         itemTypeService.createItemType(itemTypeDto);
         ResponseDto responseDto = new ResponseDto("Create successfully", HttpStatus.OK, null);
         return new ResponseEntity<>(responseDto, HttpStatus.OK);

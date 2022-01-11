@@ -154,4 +154,10 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         return new RestError(HttpStatus.BAD_REQUEST, Arrays.asList(new RestError.ErrorDetail("concurrentUpdateException", ex.getMessage())));
     }
 
+    @ExceptionHandler(UpdateException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public RestError handleUpdateException(UpdateException ex) {
+        return new RestError(HttpStatus.BAD_REQUEST, Arrays.asList(new RestError.ErrorDetail("updateException", ex.getMessage())));
+    }
+
 }

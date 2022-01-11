@@ -1,16 +1,17 @@
 package com.scm.backend.web;
 
 import com.google.common.collect.Sets;
+import com.scm.backend.model.dto.ItemDto;
 import com.scm.backend.model.dto.ResponseDto;
 import com.scm.backend.model.dto.UserDto;
 import com.scm.backend.model.dto.UserInvoiceDto;
 import com.scm.backend.model.entity.Permission;
 import com.scm.backend.model.entity.User;
-import com.scm.backend.model.exception.EmailNotExistException;
-import com.scm.backend.model.exception.UsernameAlreadyExistException;
+import com.scm.backend.model.exception.*;
 import com.scm.backend.payload.JWTLoginSuccessResponse;
 import com.scm.backend.payload.LoginRequest;
 import com.scm.backend.security.JwtTokenProvider;
+import com.scm.backend.service.HelperService;
 import com.scm.backend.service.MapValidationErrorService;
 import com.scm.backend.service.UserRoleService;
 import com.scm.backend.service.UserService;
@@ -31,6 +32,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
+import java.security.Principal;
 import java.util.List;
 
 import static com.scm.backend.security.SecurityConstants.TOKEN_PREFIX;
@@ -62,8 +64,12 @@ public class UserController {
     @Autowired
     private AuthenticationManager authenticationManager;
 
+    @Autowired
+    private HelperService helperService;
+
     @PostMapping("/register")
-    public ResponseEntity<ResponseDto> registerUser(@Valid @RequestBody UserDto userDto, BindingResult result) throws UsernameAlreadyExistException, EmailNotExistException {
+    public ResponseEntity<ResponseDto> registerUser(@Valid @RequestBody UserDto userDto, BindingResult result)
+            throws UsernameAlreadyExistException, EmailNotExistException {
         userValidator.validate(userDto, result);
 
         ResponseEntity<?> errorMap = mapValidationErrorService.MapValidationService(result);
@@ -74,13 +80,16 @@ public class UserController {
 
         User user = userService.saveUser(userDto);
 
-        ResponseDto responseDto = new ResponseDto("Create successfully", HttpStatus.CREATED, userDtoMapper.toUserDto(user));
+        ResponseDto responseDto = new ResponseDto("Create successfully",
+                HttpStatus.CREATED, userDtoMapper.toUserDto(user));
         return new ResponseEntity<>(responseDto, HttpStatus.CREATED);
     }
 
     @GetMapping("/{username}")
-    public ResponseEntity<ResponseDto> getUserByUsername(@PathVariable("username") String username) throws UsernameNotFoundException{
-        User user = userService.findUserByUsername(username).orElseThrow(() -> new UsernameNotFoundException("Can not found username: " + username));
+    public ResponseEntity<ResponseDto> getUserByUsername(@PathVariable("username") String username)
+            throws UsernameNotFoundException{
+        User user = userService.findUserByUsername(username).orElseThrow(()
+                -> new UsernameNotFoundException("Can not found username: " + username));
         UserDto userDto = userDtoMapper.toUserDto(user);
 
         UserInvoiceDto userInvoiceDto = new UserInvoiceDto();
@@ -104,7 +113,8 @@ public class UserController {
         List<User> userList = userService.getAllUser();
         List<UserDto> userDtoList = userDtoMapper.toListUserDto(userList);
         for(UserDto e : userDtoList){
-            if(!e.getUserRoleList().isEmpty() && StringUtils.isNotBlank(e.getUserRoleList().get(0).getKey().getRole().getName())){
+            if(!e.getUserRoleList().isEmpty() &&
+                    StringUtils.isNotBlank(e.getUserRoleList().get(0).getKey().getRole().getName())){
                 e.setRole(e.getUserRoleList().get(0).getKey().getRole().getName());
             } else {
                 e.setRole("Not have role");
@@ -112,6 +122,28 @@ public class UserController {
         }
         ResponseDto responseDto = new ResponseDto("Get user successfully",
                 HttpStatus.CREATED, userDtoList);
+        return new ResponseEntity<>(responseDto, HttpStatus.OK);
+    }
+
+    @PutMapping("/update")
+    public ResponseEntity<ResponseDto> updateUser(@Valid @RequestBody UserDto userDto, Principal principal)
+            throws UsernameNotExistException, UpdateException, ConcurrentUpdateException {
+        String currentUsername = principal.getName();
+
+        userService.updateUser(userDto, currentUsername);
+
+        ResponseDto responseDto = new ResponseDto("Update successfully", HttpStatus.OK, null);
+        return new ResponseEntity<>(responseDto, HttpStatus.OK);
+    }
+
+    @PutMapping("/updateUserRole")
+    public ResponseEntity<ResponseDto> updateUserRole(@Valid @RequestBody UserDto userDto, Principal principal)
+            throws UsernameNotExistException, UpdateException, ConcurrentUpdateException {
+        String currentUsername = principal.getName();
+
+        userService.updateUser(userDto, currentUsername);
+
+        ResponseDto responseDto = new ResponseDto("Update successfully", HttpStatus.OK, null);
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
     }
 

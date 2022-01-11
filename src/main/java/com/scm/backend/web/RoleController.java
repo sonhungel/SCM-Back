@@ -2,6 +2,7 @@ package com.scm.backend.web;
 
 import com.scm.backend.model.dto.*;
 import com.scm.backend.model.entity.*;
+import com.scm.backend.model.exception.UpdateException;
 import com.scm.backend.service.*;
 import com.scm.backend.util.PermissionDtoMapper;
 import com.scm.backend.util.RoleDtoMapper;
@@ -59,7 +60,7 @@ public class RoleController {
     }
 
     @PostMapping("/createUserRole")
-    public ResponseEntity<ResponseDto> createUserRole(@Valid @RequestBody UserRoleDto userRoleDto) throws Exception {
+    public ResponseEntity<ResponseDto> createUserRole(@Valid @RequestBody UserRoleDto userRoleDto) throws UpdateException {
         userRoleService.createUserRole(userRoleDto);
         ResponseDto responseDto = new ResponseDto("Create user-role successfully", HttpStatus.OK, null);
         return new ResponseEntity<>(responseDto, HttpStatus.OK);

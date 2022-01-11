@@ -3,6 +3,7 @@ package com.scm.backend.service.impl;
 import com.scm.backend.model.dto.UserInvoiceDto;
 import com.scm.backend.model.dto.UserRoleDto;
 import com.scm.backend.model.entity.*;
+import com.scm.backend.model.exception.UpdateException;
 import com.scm.backend.repository.*;
 import com.scm.backend.service.UserRoleService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,12 +35,34 @@ public class UserRoleServiceImpl implements UserRoleService {
     private PermissionRepository permissionRepository;
 
     @Override
-    public void createUserRole(UserRoleDto userRoleDto) throws Exception {
+    public void createUserRole(UserRoleDto userRoleDto) throws UpdateException {
         User user = userRepository.findUserById(userRoleDto.getKey().getUser().getId())
-                .orElseThrow(() -> new Exception("User ID does not exist"));
+                .orElseThrow(() -> new UpdateException("User ID does not exist"));
 
         Role role = roleRepository.findById(userRoleDto.getKey().getRole().getId())
-                .orElseThrow(() -> new Exception("Role ID does not exist"));
+                .orElseThrow(() -> new UpdateException("Role ID does not exist"));
+
+        UserRoleKey key = UserRoleKey.builder()
+                .user(user)
+                .role(role)
+                .build()
+                ;
+
+        UserRole userRole = UserRole.builder()
+                .key(key)
+                .addedDate(LocalDate.now())
+                .build()
+                ;
+        userRoleRepository.saveAndFlush(userRole);
+    }
+
+    @Override
+    public void createUserRoleByKeyId(Long userId, Long roleId) throws UpdateException {
+        User user = userRepository.findUserById(userId)
+                .orElseThrow(() -> new UpdateException("User ID does not exist"));
+
+        Role role = roleRepository.findById(roleId)
+                .orElseThrow(() -> new UpdateException("Role ID does not exist"));
 
         UserRoleKey key = UserRoleKey.builder()
                 .user(user)

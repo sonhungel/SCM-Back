@@ -33,7 +33,9 @@ public class InvoiceController {
     private MapValidationErrorService mapValidationErrorService;
 
     @PostMapping("/create")
-    public ResponseEntity<ResponseDto> createInvoice(@Valid @RequestBody InvoiceDto invoiceDto, BindingResult result, Principal principal) throws CustomerNumberNotFoundException {
+    public ResponseEntity<ResponseDto> createInvoice(@Valid @RequestBody InvoiceDto invoiceDto,
+                                                     BindingResult result, Principal principal)
+            throws CustomerNumberNotFoundException {
         UserInvoiceDto userInvoiceDto = new UserInvoiceDto();
         userInvoiceDto.setUsername(principal.getName());
         invoiceDto.setUser(userInvoiceDto);

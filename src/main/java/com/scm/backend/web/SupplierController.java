@@ -25,7 +25,8 @@ public class SupplierController {
     private SupplierDtoMapper supplierDtoMapper;
 
     @PostMapping
-    public ResponseEntity<ResponseDto> createItem(@Valid @RequestBody SupplierDto supplierDto) throws SupplierNumberAlreadyExist {
+    public ResponseEntity<ResponseDto> createItem(@Valid @RequestBody SupplierDto supplierDto)
+            throws SupplierNumberAlreadyExist {
         Supplier supplier = supplierService.createSupplier(supplierDto);
 
         SupplierDto result = supplierDtoMapper.toSupplierDto(supplier);

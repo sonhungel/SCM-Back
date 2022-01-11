@@ -57,18 +57,16 @@ public class ItemServiceImpl implements ItemService {
         return itemRepository.findItemsQuery(searchString);
     }
 
-    private Item updateItemWithDtoData(Item item, ItemDto itemDto) throws ItemTypeNotFoundException {
-        final ItemType itemType = itemTypeService.findItemTypeById(itemDto.getItemType().getId())
-                .orElseThrow(() -> new ItemTypeNotFoundException("Item type not found.", itemDto.getItemType().getTypeName()));
-
+    private Item updateItemWithDtoData(Item item, ItemDto itemDto) {
 
         item.setName(itemDto.getName());
-        item.setState(itemDto.getState());
-        item.setUpdateDate(itemDto.getUpdateDate());
-        item.setQuantity(itemDto.getQuantity());
+        //item.setState(itemDto.getState());
+        item.setUpdateDate(LocalDate.now());
+        //item.setQuantity(itemDto.getQuantity());
         item.setSalesPrice(itemDto.getSalesPrice());
         item.setCost(itemDto.getCost());
-        item.setItemType(itemType);
+        //item.setItemType(itemType);
+        item.setMinimumQuantity(itemDto.getMinimumQuantity());
         item.setDescription(itemDto.getDescription());
         item.setRemark(itemDto.getRemark());
 
@@ -123,7 +121,7 @@ public class ItemServiceImpl implements ItemService {
     }
 
     private Item checkBeforeUpdate(ItemDto itemDto) throws ItemNumberNotFoundException, ConcurrentUpdateItemException {
-        final Item item = itemRepository.findById(itemDto.getId())
+        final Item item = itemRepository.findItemByItemNumber(itemDto.getItemNumber())
                 .orElseThrow(()-> new ItemNumberNotFoundException("Item number not found.", itemDto.getItemNumber()));
 
         if(!Objects.equals(item.getVersion(), itemDto.getVersion())){

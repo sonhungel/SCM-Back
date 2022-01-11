@@ -30,7 +30,9 @@ public class InventoryCheckController {
     private InventoryCheckDtoMapper inventoryCheckDtoMapper;
 
     @PostMapping
-    public ResponseEntity<ResponseDto> createInventoryCheck(@Valid @RequestBody InventoryCheckDto inventoryCheckDto, Principal principal) throws ItemNumberNotFoundException {
+    public ResponseEntity<ResponseDto> createInventoryCheck(@Valid @RequestBody InventoryCheckDto inventoryCheckDto,
+                                                            Principal principal)
+            throws ItemNumberNotFoundException {
         UserInvoiceDto userInvoiceDto = new UserInvoiceDto();
         userInvoiceDto.setUsername(principal.getName());
 

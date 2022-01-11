@@ -17,13 +17,10 @@ import java.util.Set;
 @EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = true)
 public class UserDto extends SupperDto {
     @EqualsAndHashCode.Include
-    @NotBlank
     private String username;
 
-    @NotBlank
     private String fullName;
 
-    @NotBlank
     private String password;
 
     private String email;

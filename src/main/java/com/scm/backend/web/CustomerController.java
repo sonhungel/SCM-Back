@@ -29,7 +29,8 @@ public class CustomerController {
     private CustomerDtoMapper customerDtoMapper;
 
     @PostMapping
-    public ResponseEntity<ResponseDto> createCustomer(@Valid @RequestBody CustomerDto customerDto) throws CustomerNumberAlreadyExistException {
+    public ResponseEntity<ResponseDto> createCustomer(@Valid @RequestBody CustomerDto customerDto)
+            throws CustomerNumberAlreadyExistException {
         Customer customer = customerService.createCustomer(customerDto);
         CustomerDto customerDto1 = customerDtoMapper.toCustomerDto(customer);
 

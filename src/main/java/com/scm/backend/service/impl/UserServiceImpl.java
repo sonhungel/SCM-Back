@@ -1,18 +1,29 @@
 package com.scm.backend.service.impl;
 
 import com.scm.backend.model.dto.UserDto;
+import com.scm.backend.model.dto.UserRoleDto;
+import com.scm.backend.model.entity.Role;
 import com.scm.backend.model.entity.User;
-import com.scm.backend.model.exception.EmailNotExistException;
-import com.scm.backend.model.exception.UsernameAlreadyExistException;
+import com.scm.backend.model.entity.UserRole;
+import com.scm.backend.model.exception.*;
+import com.scm.backend.repository.RoleRepository;
 import com.scm.backend.repository.UserRepository;
+import com.scm.backend.repository.UserRoleRepository;
+import com.scm.backend.service.HelperService;
+import com.scm.backend.service.UserRoleService;
 import com.scm.backend.service.UserService;
+import org.apache.commons.lang3.StringUtils;
+import org.hibernate.Session;
+import org.hibernate.sql.Update;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManager;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -28,6 +39,18 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder;
+
+    @Autowired
+    private UserRoleService userRoleService;
+
+    @Autowired
+    private UserRoleRepository userRoleRepository;
+
+    @Autowired
+    private RoleRepository roleRepository;
+
+    @Autowired
+    private HelperService helperService;
 
     public User saveUser(UserDto userDto) throws UsernameAlreadyExistException, EmailNotExistException {
         checkBeforeCreateUser(userDto);
@@ -53,6 +76,81 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<User> getAllUser() {
         return userRepository.findAll();
+    }
+
+    @Override
+    public User updateUser(UserDto userDto, String currentUsername) throws UsernameNotExistException, UpdateException, ConcurrentUpdateException {
+        User user = checkBeforeUpdate(userDto, currentUsername);
+
+        updateUserWithNewData(user, userDto);
+
+        return user;
+    }
+
+    private void updateUserWithNewData(User user, UserDto userDto) {
+
+        if(StringUtils.isNotBlank(userDto.getPassword())){
+            user.setPassword(bCryptPasswordEncoder.encode(userDto.getPassword()));
+        }
+
+        user.setFullName(userDto.getFullName());
+        user.setEmail(userDto.getEmail());
+        user.setPhoneNumber(userDto.getPhoneNumber());
+        user.setDateOfBirth(userDto.getDateOfBirth());
+        user.setAddress(userDto.getAddress());
+        user.setProvince(userDto.getProvince());
+        user.setWard(userDto.getWard());
+        user.setDistrict(userDto.getDistrict());
+        user.setUpdateDate(LocalDate.now());
+
+        userRepository.save(user);
+    }
+
+    private User checkBeforeUpdate(UserDto userDto, String currentUsername) throws UsernameNotExistException, ConcurrentUpdateException, UpdateException {
+        User user = userRepository.findUserByUsername(userDto.getUsername())
+                .orElseThrow(() -> new UsernameNotExistException("Username not exist while update info", userDto.getUsername()));
+
+        User currentUser = userRepository.findUserByUsername(currentUsername)
+                .orElseThrow(() -> new UsernameNotExistException("Current username not exist while update info", currentUsername));
+
+        if(!Objects.equals(user.getVersion(), userDto.getVersion())){
+            throw new ConcurrentUpdateException("Cannot update user, version have been changed.");
+        }
+        if(!currentUser.getUserRoleList().isEmpty()){
+            if(!StringUtils.equals(currentUser.getUserRoleList().get(0).getKey().getRole().getName(), "Quản lý")) { // not manager
+                if(!Objects.equals(user.getUsername(), currentUsername)){
+                    throw new UpdateException("Update failed, only manager can update another user");
+                }
+            } else { // is manager
+                if(!user.getUserRoleList().isEmpty()) {
+                    if(!StringUtils.equals(user.getUserRoleList().get(0).getKey().getRole().getName(), userDto.getRole())) {
+                        List<Role> roleList = roleRepository.findByName(userDto.getRole());
+
+                        if(roleList.isEmpty()) {
+                            throw new UpdateException("Role name not found when update role for user");
+                        }
+
+                        Role newRole = roleList.get(0);
+                        Role oldRole = user.getUserRoleList().get(0).getKey().getRole();
+
+                        if(!Objects.equals(newRole, oldRole)){
+                            userRoleRepository.deleteByUserIdRoleId(user.getId());
+                            userRoleService.createUserRoleByKeyId(user.getId(), newRole.getId());
+                        }
+                    }
+                } else {
+                    List<Role> roleList = roleRepository.findByName(userDto.getRole());
+                    if(roleList.isEmpty()) {
+                        throw new UpdateException("Role name not found when update role for user");
+                    }
+                    Role role = roleList.get(0);
+
+                    userRoleService.createUserRoleByKeyId(user.getId(), role.getId());
+                }
+            }
+        }
+
+        return user;
     }
 
     private void checkBeforeCreateUser(UserDto userDto) throws UsernameAlreadyExistException, EmailNotExistException {
