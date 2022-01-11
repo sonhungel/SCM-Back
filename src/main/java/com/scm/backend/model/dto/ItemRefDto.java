@@ -13,6 +13,8 @@ public class ItemRefDto extends SupperDto {
     @EqualsAndHashCode.Include
     private Integer itemNumber;
 
+    private String name;
+
     private Long quantity;
 
     private Long minimumQuantity;

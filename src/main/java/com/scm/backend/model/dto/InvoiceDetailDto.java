@@ -9,11 +9,19 @@ import lombok.Setter;
 @Setter
 @EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = true)
 public class InvoiceDetailDto extends SupperDto{
+    // deprecated
     private InvoiceDetailKeyDto key;
+
+    private Integer customerNumber;
+
+    private Integer itemNumber;
 
     private Long quantity;
 
     private Long price;
 
     private Double discount;
+
+    // set internal
+    private Long invoiceId;
 }

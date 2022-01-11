@@ -9,4 +9,5 @@ import java.util.List;
 public interface InvoiceService {
     Invoice createInvoice(InvoiceDto invoiceDto) throws CustomerNumberNotFoundException;
     List<Invoice> getAllInvoice();
+    Invoice createInvoiceFull(InvoiceDto invoiceDto);
 }

@@ -41,13 +41,23 @@ public class InvoiceServiceImpl implements InvoiceService {
         return invoiceRepository.findAll();
     }
 
+    @Override
+    public Invoice createInvoiceFull(InvoiceDto invoiceDto) {
+
+        return null;
+    }
+
     private Invoice createNewInvoiceWithDtoData(InvoiceDto invoiceDto) throws UsernameNotFoundException, CustomerNumberNotFoundException {
         final String username = invoiceDto.getUser().getUsername();
-        User user = userRepository.findUserByUsername(username).orElseThrow(() -> new UsernameNotFoundException("Username not found"));
+
+        User user = userRepository.findUserByUsername(username).orElseThrow(()
+                -> new UsernameNotFoundException("Username not found"));
 
         if(invoiceDto.getCustomer().getCustomerNumber() == null){
-            throw new CustomerNumberNotFoundException("Customer number could not be NULL", invoiceDto.getCustomer().getCustomerNumber());
+            throw new CustomerNumberNotFoundException("Customer number could not be NULL",
+                    invoiceDto.getCustomer().getCustomerNumber());
         }
+
         Customer customer = customerRepository.findCustomerByCustomerNumber(invoiceDto.getCustomer().getCustomerNumber())
                 .orElseThrow(() -> new CustomerNumberNotFoundException("Customer not found", invoiceDto.getCustomer().getCustomerNumber()));
 
