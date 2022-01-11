@@ -8,8 +8,9 @@ import java.util.List;
 import java.util.Optional;
 
 public interface UserService {
-    User saveUser(UserDto userDto) throws UsernameAlreadyExistException, EmailNotExistException;
+    User saveUser(UserDto userDto) throws UsernameAlreadyExistException, EmailNotExistException, UpdateException;
     Optional<User> findUserByUsername(String username);
     List<User> getAllUser();
-    User updateUser(UserDto userDto, String currentUsername) throws UsernameNotExistException, UpdateException, ConcurrentUpdateException;
+    User updateUser(UserDto userDto, String currentUsername) throws UsernameNotExistException, UpdateException, ConcurrentUpdateException, EmailNotExistException;
+    void deleteUser(UserDto userDto, String currentUsername) throws DeleteException;
 }

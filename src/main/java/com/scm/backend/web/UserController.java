@@ -15,6 +15,7 @@ import com.scm.backend.service.HelperService;
 import com.scm.backend.service.MapValidationErrorService;
 import com.scm.backend.service.UserRoleService;
 import com.scm.backend.service.UserService;
+import com.scm.backend.util.InternalState;
 import com.scm.backend.util.RoleDtoMapper;
 import com.scm.backend.util.UserDtoMapper;
 import com.scm.backend.validator.UserDtoValidator;
@@ -34,6 +35,7 @@ import javax.validation.Valid;
 
 import java.security.Principal;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.scm.backend.security.SecurityConstants.TOKEN_PREFIX;
 
@@ -69,7 +71,7 @@ public class UserController {
 
     @PostMapping("/register")
     public ResponseEntity<ResponseDto> registerUser(@Valid @RequestBody UserDto userDto, BindingResult result)
-            throws UsernameAlreadyExistException, EmailNotExistException {
+            throws UsernameAlreadyExistException, EmailNotExistException, UpdateException {
         userValidator.validate(userDto, result);
 
         ResponseEntity<?> errorMap = mapValidationErrorService.MapValidationService(result);
@@ -110,7 +112,8 @@ public class UserController {
 
     @GetMapping("/getAllUser")
     public ResponseEntity<ResponseDto> getAllUser() {
-        List<User> userList = userService.getAllUser();
+        List<User> userList = userService.getAllUser().stream().filter(e ->
+                e.getInternalState() != InternalState.DELETED).collect(Collectors.toList());
         List<UserDto> userDtoList = userDtoMapper.toListUserDto(userList);
         for(UserDto e : userDtoList){
             if(!e.getUserRoleList().isEmpty() &&
@@ -127,7 +130,7 @@ public class UserController {
 
     @PutMapping("/update")
     public ResponseEntity<ResponseDto> updateUser(@Valid @RequestBody UserDto userDto, Principal principal)
-            throws UsernameNotExistException, UpdateException, ConcurrentUpdateException {
+            throws UsernameNotExistException, UpdateException, ConcurrentUpdateException, EmailNotExistException {
         String currentUsername = principal.getName();
 
         userService.updateUser(userDto, currentUsername);
@@ -136,9 +139,19 @@ public class UserController {
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
     }
 
+    @GetMapping("/delete")
+    public ResponseEntity<ResponseDto> deleteUser(@Valid @RequestBody UserDto userDto, Principal principal) throws DeleteException {
+        String currentUsername = principal.getName();
+
+        userService.deleteUser(userDto, currentUsername);
+
+        ResponseDto responseDto = new ResponseDto("Update successfully", HttpStatus.OK, null);
+        return new ResponseEntity<>(responseDto, HttpStatus.OK);
+    }
+
     @PutMapping("/updateUserRole")
     public ResponseEntity<ResponseDto> updateUserRole(@Valid @RequestBody UserDto userDto, Principal principal)
-            throws UsernameNotExistException, UpdateException, ConcurrentUpdateException {
+            throws UsernameNotExistException, UpdateException, ConcurrentUpdateException, EmailNotExistException {
         String currentUsername = principal.getName();
 
         userService.updateUser(userDto, currentUsername);

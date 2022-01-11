@@ -12,10 +12,12 @@ import com.scm.backend.repository.UserRoleRepository;
 import com.scm.backend.service.HelperService;
 import com.scm.backend.service.UserRoleService;
 import com.scm.backend.service.UserService;
+import com.scm.backend.util.InternalState;
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.Session;
 import org.hibernate.sql.Update;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -52,7 +54,8 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private HelperService helperService;
 
-    public User saveUser(UserDto userDto) throws UsernameAlreadyExistException, EmailNotExistException {
+    @Override
+    public User saveUser(UserDto userDto) throws UsernameAlreadyExistException, EmailNotExistException, UpdateException {
         checkBeforeCreateUser(userDto);
 
         userDto.setPassword(bCryptPasswordEncoder.encode(userDto.getPassword()));
@@ -64,7 +67,8 @@ public class UserServiceImpl implements UserService {
 
         // Make sure that password and confirmPassword match
         // We don't persist or show the confirmPassword
-        userRepository.save(user);
+        userRepository.saveAndFlush(user);
+        createUserRoleInternal(user, userDto.getRole());
         return user;
     }
 
@@ -79,12 +83,29 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User updateUser(UserDto userDto, String currentUsername) throws UsernameNotExistException, UpdateException, ConcurrentUpdateException {
+    public User updateUser(UserDto userDto, String currentUsername) throws UsernameNotExistException, UpdateException, ConcurrentUpdateException, EmailNotExistException {
         User user = checkBeforeUpdate(userDto, currentUsername);
 
         updateUserWithNewData(user, userDto);
 
         return user;
+    }
+
+    @Override
+    public void deleteUser(UserDto userDto, String currentUsername) throws DeleteException {
+        User user = userRepository.findUserByUsername(currentUsername).orElseThrow(() ->
+                new UsernameNotFoundException("Current username not found while delete user"));
+        if(StringUtils.equals(user.getUserRoleList().get(0).getKey().getRole().getName(), "Quản lý")){
+            User userBeDelete = userRepository.findUserByUsername(userDto.getUsername()).orElseThrow(() ->
+                    new UsernameNotFoundException("Current username not found while delete user"));
+            if(Objects.equals(user, userBeDelete)){
+                throw new DeleteException("User can not delete itself");
+            }
+            userBeDelete.setInternalState(InternalState.DELETED);
+            userRepository.saveAndFlush(userBeDelete);
+        } else {
+            throw new DeleteException("Only manager can delete user");
+        }
     }
 
     private void updateUserWithNewData(User user, UserDto userDto) {
@@ -106,12 +127,15 @@ public class UserServiceImpl implements UserService {
         userRepository.save(user);
     }
 
-    private User checkBeforeUpdate(UserDto userDto, String currentUsername) throws UsernameNotExistException, ConcurrentUpdateException, UpdateException {
+    private User checkBeforeUpdate(UserDto userDto, String currentUsername) throws UsernameNotExistException, ConcurrentUpdateException, UpdateException, EmailNotExistException {
         User user = userRepository.findUserByUsername(userDto.getUsername())
                 .orElseThrow(() -> new UsernameNotExistException("Username not exist while update info", userDto.getUsername()));
 
         User currentUser = userRepository.findUserByUsername(currentUsername)
                 .orElseThrow(() -> new UsernameNotExistException("Current username not exist while update info", currentUsername));
+        if(!validateEmail(userDto.getEmail())){
+            throw new EmailNotExistException("Email not exist", userDto.getEmail());
+        }
 
         if(!Objects.equals(user.getVersion(), userDto.getVersion())){
             throw new ConcurrentUpdateException("Cannot update user, version have been changed.");
@@ -182,5 +206,16 @@ public class UserServiceImpl implements UserService {
                 .confirmPassword(userDto.getConfirmPassword())
                 .addedDate(LocalDate.now())
                 .build();
+    }
+
+    private void createUserRoleInternal(User user, String roleName) throws UpdateException {
+
+        List<Role> roleList = roleRepository.findByName(roleName);
+        if(roleList.isEmpty()) {
+            throw new UpdateException("Role name not found when create role for user");
+        }
+        Role role = roleList.get(0);
+
+        userRoleService.createUserRoleByKeyId(user.getId(), role.getId());
     }
 }

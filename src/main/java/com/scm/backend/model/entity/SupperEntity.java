@@ -1,5 +1,7 @@
 package com.scm.backend.model.entity;
 
+
+import com.scm.backend.util.InternalState;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -28,4 +30,8 @@ public class SupperEntity {
 
     @Column
     private LocalDate updateDate;
+
+    @Column
+    @Enumerated(EnumType.STRING)
+    private InternalState internalState;
 }

@@ -81,7 +81,7 @@ public class UserRoleServiceImpl implements UserRoleService {
     @Override
     public List<Permission> getUserPermission(UserInvoiceDto userInvoiceDto) {
         User user = userRepository.findUserByUsername(userInvoiceDto.getUsername())
-                .orElseThrow(() -> new UsernameNotFoundException("User name not found"));
+                .orElseThrow(() -> new UsernameNotFoundException("Username not found"));
         List<UserRole> userRoleList = userRoleRepository.findByKey_User_Id(user.getId());
         if(!userRoleList.isEmpty()){
             List<Permission> permissionList = new ArrayList<>();
