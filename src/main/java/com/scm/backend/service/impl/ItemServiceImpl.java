@@ -57,6 +57,11 @@ public class ItemServiceImpl implements ItemService {
         return itemRepository.findItemsQuery(searchString);
     }
 
+    @Override
+    public void deleteItems(List<Integer> itemNumbers) {
+        itemRepository.deleteItems(itemNumbers);
+    }
+
     private Item updateItemWithDtoData(Item item, ItemDto itemDto) {
 
         item.setName(itemDto.getName());

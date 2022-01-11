@@ -12,4 +12,5 @@ public interface ItemService {
     Item getItemByItemNumber(Integer itemNumber) throws ItemNumberNotFoundException;
     List<Item> findItemWithQuery(String searchString);
 
+    void deleteItems(List<Integer> itemNumbers);
 }
