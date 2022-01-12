@@ -12,12 +12,10 @@ import com.scm.backend.util.SupTicketDtoMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/supTicket")
@@ -34,6 +32,16 @@ public class SupTicketController {
         SupTicket s = supTicketService.createSupTicket(suptTicketDto);
 
         SuptTicketDto result = supTicketDtoMapper.toSupTicketDto(s);
+
+        ResponseDto responseDto = new ResponseDto("Create successfully", HttpStatus.OK, result);
+        return new ResponseEntity<>(responseDto, HttpStatus.OK);
+    }
+
+    @GetMapping
+    public ResponseEntity<ResponseDto> getST() {
+        List<SupTicket> s = supTicketService.getAllSupTicket();
+
+        List<SuptTicketDto> result = supTicketDtoMapper.toSupTicketDtoList(s);
 
         ResponseDto responseDto = new ResponseDto("Create successfully", HttpStatus.OK, result);
         return new ResponseEntity<>(responseDto, HttpStatus.OK);

@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Service
 @Transactional(rollbackFor = Exception.class)
@@ -36,6 +37,11 @@ public class SupTicketServiceImpl implements SupTicketService {
         supTicketRepository.saveAndFlush(supTicket);
 
         return supTicket;
+    }
+
+    @Override
+    public List<SupTicket> getAllSupTicket() {
+        return supTicketRepository.findAll();
     }
 
     private SupTicket createNewSupTK(SuptTicketDto suptTicketDto) throws CreateException {
