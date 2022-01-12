@@ -42,11 +42,20 @@ public class InvoiceDetailServiceImpl implements InvoiceDetailService {
         createNewInvoiceDetail(invoiceDetailDto);
     }
 
-    private void addTotalToInvoice(Long invoiceId, Long totalPaid) throws InvoiceNotFoundException {
+    private void addTotalToInvoice(Long invoiceId, Long totalPaid, Long totalCost) throws InvoiceNotFoundException {
         final Invoice invoice = invoiceRepository.findById(invoiceId)
                 .orElseThrow(() -> new InvoiceNotFoundException("Invoice not found", invoiceId));
 
+        if(invoice.getPaid().equals(0L)){
+            invoice.setPaid(0L);
+        }
+        if(invoice.getCost().equals(0L)){
+            invoice.setCost(0L);
+        }
+
         invoice.setPaid(invoice.getPaid() + totalPaid);
+
+        invoice.setCost(invoice.getCost() + totalCost);
 
         invoice.setStatus(InvoiceState.CLOSED);
 
@@ -116,7 +125,7 @@ public class InvoiceDetailServiceImpl implements InvoiceDetailService {
 
         Long invoiceId = invoiceDetailDtoList.get(0).getKey().getInvoice().getId();
 
-        addTotalToInvoice(invoiceId, totalPaid);
+        addTotalToInvoice(invoiceId, totalPaid, totalPaid);
     }
 
     @Override
@@ -126,6 +135,7 @@ public class InvoiceDetailServiceImpl implements InvoiceDetailService {
         }
 
         Long totalPaid = 0L;
+        Long totalCost = 0L;
 
         final List<InvoiceDetail> invoiceDetails = new ArrayList<>();
 
@@ -135,13 +145,14 @@ public class InvoiceDetailServiceImpl implements InvoiceDetailService {
             }
             invoiceDetails.add(createInvoiceDetailInternal(i));
             totalPaid += i.getPrice() * i.getQuantity();
+            totalCost += i.getCost() * i.getQuantity();
         }
 
         //invoiceDetailRepository.saveAllAndFlush(invoiceDetails);
 
         Long invoiceId = invoiceDetailDtoList.get(0).getInvoiceId();
 
-        addTotalToInvoice(invoiceId, totalPaid);
+        addTotalToInvoice(invoiceId, totalPaid, totalCost);
     }
 
     private InvoiceDetail createInvoiceDetailInternal(InvoiceDetailDto invoiceDetailDto) throws ItemNumberNotFoundException, InvoiceNotFoundException, InvoiceDetailAlreadyExistException {

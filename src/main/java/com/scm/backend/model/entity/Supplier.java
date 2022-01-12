@@ -13,6 +13,7 @@ import javax.persistence.OneToMany;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Set;
 
 @Getter
@@ -65,4 +66,7 @@ public class Supplier extends SupperEntity {
 
     @OneToMany(mappedBy = "supplier", fetch = FetchType.LAZY)
     private Set<Item> itemSet;
+
+    @OneToMany(mappedBy = "supplier", fetch = FetchType.LAZY)
+    private List<SupTicket> supTicketList;
 }

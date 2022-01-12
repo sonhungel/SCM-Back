@@ -20,6 +20,8 @@ public class InvoiceDetailDto extends SupperDto{
 
     private Long price;
 
+    private Long cost;
+
     private Double discount;
 
     // set internal

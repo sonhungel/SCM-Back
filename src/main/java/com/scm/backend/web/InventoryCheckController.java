@@ -8,6 +8,7 @@ import com.scm.backend.model.entity.Customer;
 import com.scm.backend.model.entity.InventoryCheck;
 import com.scm.backend.model.exception.CustomerNumberAlreadyExistException;
 import com.scm.backend.model.exception.ItemNumberNotFoundException;
+import com.scm.backend.model.exception.UpdateException;
 import com.scm.backend.service.InventoryCheckService;
 import com.scm.backend.util.InventoryCheckDtoMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +33,7 @@ public class InventoryCheckController {
     @PostMapping
     public ResponseEntity<ResponseDto> createInventoryCheck(@Valid @RequestBody InventoryCheckDto inventoryCheckDto,
                                                             Principal principal)
-            throws ItemNumberNotFoundException {
+            throws ItemNumberNotFoundException, UpdateException {
         UserInvoiceDto userInvoiceDto = new UserInvoiceDto();
         userInvoiceDto.setUsername(principal.getName());
 

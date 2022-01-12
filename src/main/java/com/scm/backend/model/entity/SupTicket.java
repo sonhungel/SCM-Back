@@ -1,7 +1,6 @@
 package com.scm.backend.model.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.scm.backend.util.InvoiceState;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -9,7 +8,6 @@ import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
 import javax.persistence.*;
-import java.util.Set;
 
 @Getter
 @Setter
@@ -17,25 +15,20 @@ import java.util.Set;
 @AllArgsConstructor
 @SuperBuilder
 @Entity
-public class Invoice extends SupperEntity {
+public class SupTicket extends SupperEntity {
     @Column
-    private Long paid = 0L;
+    private Long cost;
 
     @Column
-    private Long cost = 0L;
-
-    @Column
-    @Enumerated(EnumType.STRING)
-    private InvoiceState status;
+    private Long quantity;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(nullable = false, name = "user_id")
+    @JoinColumn(nullable = false, name = "item_id")
     @JsonIgnore
-    private User user;
+    private Item item;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(nullable = false, name = "customer_id")
+    @JoinColumn(nullable = false, name = "supplier_id")
     @JsonIgnore
-    private Customer customer;
-
+    private Supplier supplier;
 }

@@ -1,6 +1,5 @@
 package com.scm.backend.model.dto;
 
-import com.sun.istack.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -8,13 +7,12 @@ import lombok.Setter;
 @Getter
 @Setter
 @EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = true)
-public class ItemRefDto extends SupperDto {
-    @EqualsAndHashCode.Include
-    private Integer itemNumber;
+public class SuptTicketDto extends SupperDto {
+    private SupplierDto supplier;
 
-    private String name;
+    private ItemRefDto item;
 
     private Long quantity;
 
-    private Long minimumQuantity;
+    private Long cost;
 }

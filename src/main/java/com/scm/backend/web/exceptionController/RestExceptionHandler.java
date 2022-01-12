@@ -172,4 +172,10 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         return new RestError(HttpStatus.BAD_REQUEST, Arrays.asList(new RestError.ErrorDetail("deleteException", ex.getMessage())));
     }
 
+    @ExceptionHandler(CreateException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public RestError handleCreateException(CreateException ex) {
+        return new RestError(HttpStatus.BAD_REQUEST, Arrays.asList(new RestError.ErrorDetail("createException", ex.getMessage())));
+    }
+
 }

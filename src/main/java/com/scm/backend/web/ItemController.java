@@ -59,6 +59,12 @@ public class ItemController {
                 .stream().filter(e -> e.getInternalState() != InternalState.DELETED).collect(Collectors.toList()));
     }
 
+    /*@GetMapping("/addQuantity")
+    public List<ItemDto> finItems(@RequestParam("searchValue") String searchValue){
+        return itemDtoMapper.toListItemDto(itemService.findItemWithQuery(searchValue)
+                .stream().filter(e -> e.getInternalState() != InternalState.DELETED).collect(Collectors.toList()));
+    }*/
+
     @GetMapping("/delete")
     public ResponseEntity<ResponseDto> deleteItem(@Valid @RequestBody List<Integer> itemNumbers){
         itemService.deleteItems(itemNumbers);

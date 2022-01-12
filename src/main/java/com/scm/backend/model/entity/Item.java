@@ -9,6 +9,7 @@ import lombok.experimental.SuperBuilder;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Set;
 
 @Getter
@@ -58,5 +59,8 @@ public class Item extends SupperEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(nullable = true, name = "supplier_id")
     private Supplier supplier;
+
+    @OneToMany(mappedBy = "item", fetch = FetchType.LAZY)
+    private List<SupTicket> supTicketList;
 
 }
