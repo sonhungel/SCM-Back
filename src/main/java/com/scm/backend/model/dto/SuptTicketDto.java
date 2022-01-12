@@ -15,4 +15,6 @@ public class SuptTicketDto extends SupperDto {
     private Long quantity;
 
     private Long cost;
+
+    private String remark;
 }

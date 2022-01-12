@@ -65,6 +65,7 @@ public class SupTicketServiceImpl implements SupTicketService {
                 .supplier(supplier)
                 .cost(suptTicketDto.getCost())
                 .quantity(suptTicketDto.getQuantity())
+                .remark(suptTicketDto.getRemark())
                 .addedDate(LocalDate.now())
                 .build()
                 ;

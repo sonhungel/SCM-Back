@@ -22,6 +22,9 @@ public class SupTicket extends SupperEntity {
     @Column
     private Long quantity;
 
+    @Column(columnDefinition = "nvarchar(255)")
+    private String remark;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(nullable = false, name = "item_id")
     @JsonIgnore
