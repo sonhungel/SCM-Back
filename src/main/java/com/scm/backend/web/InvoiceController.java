@@ -34,7 +34,7 @@ public class InvoiceController {
     @Autowired
     private InvoiceDetailService invoiceDetailService;
 
-    @PostMapping("/create")
+    /*@PostMapping("/create")
     public ResponseEntity<ResponseDto> createInvoice(@Valid @RequestBody InvoiceDto invoiceDto,
                                                      BindingResult result, Principal principal)
             throws CustomerNumberNotFoundException {
@@ -55,7 +55,7 @@ public class InvoiceController {
 
         ResponseDto responseDto = new ResponseDto("Create invoice successfully", HttpStatus.OK, invoiceData);
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
-    }
+    }*/
 
     @PostMapping("/createFull")
     public ResponseEntity<ResponseDto> createInvoiceFull(@Valid @RequestBody InvoiceDto invoiceDto,

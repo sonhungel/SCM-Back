@@ -45,11 +45,10 @@ public class InvoiceDetailServiceImpl implements InvoiceDetailService {
     private void addTotalToInvoice(Long invoiceId, Long totalPaid, Long totalCost) throws InvoiceNotFoundException {
         final Invoice invoice = invoiceRepository.findById(invoiceId)
                 .orElseThrow(() -> new InvoiceNotFoundException("Invoice not found", invoiceId));
-
-        if(invoice.getPaid().equals(0L)){
+        if(invoice.getPaid() == null){
             invoice.setPaid(0L);
         }
-        if(invoice.getCost().equals(0L)){
+        if(invoice.getCost() == null){
             invoice.setCost(0L);
         }
 
@@ -108,6 +107,7 @@ public class InvoiceDetailServiceImpl implements InvoiceDetailService {
     }
 
     @Override
+    //deprecated
     public void createAllInvoiceDetail(List<InvoiceDetailDto> invoiceDetailDtoList) throws Exception {
         if(invoiceDetailDtoList.isEmpty()) {
             return;
@@ -145,7 +145,11 @@ public class InvoiceDetailServiceImpl implements InvoiceDetailService {
             }
             invoiceDetails.add(createInvoiceDetailInternal(i));
             totalPaid += i.getPrice() * i.getQuantity();
-            totalCost += i.getCost() * i.getQuantity();
+            if(i.getCost() == null){
+                totalCost = 0L;
+            }else {
+                totalCost += i.getCost() * i.getQuantity();
+            }
         }
 
         //invoiceDetailRepository.saveAllAndFlush(invoiceDetails);
