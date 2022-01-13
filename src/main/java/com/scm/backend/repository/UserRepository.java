@@ -10,6 +10,7 @@ import org.springframework.data.querydsl.QuerydslPredicateExecutor;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.math.BigInteger;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
@@ -25,6 +26,9 @@ public interface UserRepository extends JpaRepository<User, Long>, QuerydslPredi
 
     @Query(value = "select sum(paid) from invoice where added_date = :date and status = 'CLOSED';", nativeQuery = true)
     List<DailyReportDto> getDailyCost(@Param("date") LocalDate date);
+
+    @Query(value = "select max(id) from item", nativeQuery = true)
+    int getLatestItemId();
 
 
     @Modifying

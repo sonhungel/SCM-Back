@@ -8,6 +8,7 @@ import com.scm.backend.model.entity.Supplier;
 import com.scm.backend.model.exception.*;
 import com.scm.backend.repository.ItemRepository;
 import com.scm.backend.repository.SupplierRepository;
+import com.scm.backend.repository.UserRepository;
 import com.scm.backend.repository.custom.ItemRepositoryCustom;
 import com.scm.backend.service.ItemService;
 import com.scm.backend.service.ItemTypeService;
@@ -32,6 +33,9 @@ public class ItemServiceImpl implements ItemService {
 
     @Autowired
     private SupplierRepository supplierRepository;
+
+    @Autowired
+    private UserRepository userRepository;
 
     @Override
     public void createItem(ItemDto itemDto) throws ItemNumberAlreadyExistException, ItemNumberLessThanOne, ItemTypeNotFoundException, SupplierNotFoundException {
@@ -118,6 +122,11 @@ public class ItemServiceImpl implements ItemService {
     private void checkBeforeCreate(ItemDto itemDto) throws ItemNumberAlreadyExistException, ItemNumberLessThanOne {
         if (itemRepository.findItemByItemNumber(itemDto.getItemNumber()).isPresent()) {
             throw new ItemNumberAlreadyExistException("Item number already exist", itemDto.getItemNumber());
+        }
+
+        if(itemDto.getItemNumber() == null) {
+            int max = userRepository.getLatestItemId();
+            itemDto.setItemNumber(max + 1);
         }
 
         if(itemDto.getItemNumber() < 1){
