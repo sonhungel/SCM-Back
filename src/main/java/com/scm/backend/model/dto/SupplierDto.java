@@ -24,7 +24,6 @@ public class SupplierDto extends SupperDto {
 
     private String email;
 
-    @Pattern(regexp="(^$|[0-9]{10})")
     @Size(min = 10, max = 11)
     private String phoneNumber;
 

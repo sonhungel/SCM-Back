@@ -139,9 +139,12 @@ public class UserController {
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
     }
 
-    @GetMapping("/delete")
-    public ResponseEntity<ResponseDto> deleteUser(@Valid @RequestBody UserDto userDto, Principal principal) throws DeleteException {
+    @DeleteMapping("/delete/{username}")
+    public ResponseEntity<ResponseDto> deleteUser(@PathVariable("username") String username, Principal principal) throws DeleteException {
         String currentUsername = principal.getName();
+
+        UserDto userDto = new UserDto();
+        userDto.setUsername(username);
 
         userService.deleteUser(userDto, currentUsername);
 

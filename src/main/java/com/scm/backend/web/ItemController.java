@@ -72,4 +72,13 @@ public class ItemController {
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
     }
 
+    @DeleteMapping("/delete/{itemNumber}")
+    public ResponseEntity<ResponseDto> deleteItem(@PathVariable("itemNumber") Integer itemNumber){
+        List<Integer> itemNumbers = new ArrayList<>();
+        itemNumbers.add(itemNumber);
+        itemService.deleteItems(itemNumbers);
+        ResponseDto responseDto = new ResponseDto("Delete successfully", HttpStatus.OK, null);
+        return new ResponseEntity<>(responseDto, HttpStatus.OK);
+    }
+
 }

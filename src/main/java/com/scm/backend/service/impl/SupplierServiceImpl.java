@@ -1,9 +1,13 @@
 package com.scm.backend.service.impl;
 
+import com.scm.backend.model.dto.CustomerDto;
 import com.scm.backend.model.dto.SupplierDto;
+import com.scm.backend.model.entity.Customer;
 import com.scm.backend.model.entity.Supplier;
+import com.scm.backend.model.exception.ConcurrentUpdateItemException;
 import com.scm.backend.model.exception.DeleteException;
 import com.scm.backend.model.exception.SupplierNumberAlreadyExist;
+import com.scm.backend.model.exception.UpdateException;
 import com.scm.backend.repository.SupplierRepository;
 import com.scm.backend.repository.UserRepository;
 import com.scm.backend.service.SupplierService;
@@ -14,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @Transactional(rollbackFor = Exception.class)
@@ -43,6 +48,38 @@ public class SupplierServiceImpl implements SupplierService {
         supplier.setInternalState(InternalState.DELETED);
         supplierRepository.saveAndFlush(supplier);
 
+    }
+
+    @Override
+    public void updateSupplier(SupplierDto supplierDto) throws ConcurrentUpdateItemException, UpdateException {
+        Supplier supplier = checkBeforeUpdate(supplierDto);
+
+        updateWithDto(supplier, supplierDto);
+    }
+
+    private void updateWithDto(Supplier supplier, SupplierDto supplierDto) {
+        supplier.setName(supplierDto.getName());
+        supplier.setEmail(supplierDto.getEmail());
+        supplier.setPhoneNumber(supplierDto.getPhoneNumber());
+        supplier.setTaxNumber(supplierDto.getTaxNumber());
+        supplier.setAddress(supplierDto.getAddress());
+        supplier.setProvince(supplierDto.getProvince());
+        supplier.setWard(supplierDto.getWard());
+        supplier.setDistrict(supplierDto.getDistrict());
+        supplier.setRemark(supplierDto.getRemark());
+
+        supplierRepository.saveAndFlush(supplier);
+    }
+
+    private Supplier checkBeforeUpdate(SupplierDto supplierDto) throws UpdateException, ConcurrentUpdateItemException {
+        Supplier supplier = supplierRepository.findById(supplierDto.getId())
+                .orElseThrow(() -> new UpdateException("Supplier not found when update"));
+
+        if(!Objects.equals(supplier.getVersion(), supplierDto.getVersion())){
+            throw new ConcurrentUpdateItemException("Cannot update supplier, version have been changed.", supplierDto.getId());
+        }
+
+        return supplier;
     }
 
     private Supplier createNewItemWithDtoData(SupplierDto supplierDto) {

@@ -1,12 +1,11 @@
 package com.scm.backend.web;
 
 import com.scm.backend.model.dto.CustomerDto;
+import com.scm.backend.model.dto.ItemDto;
 import com.scm.backend.model.dto.ResponseDto;
 import com.scm.backend.model.dto.SupplierDto;
 import com.scm.backend.model.entity.Customer;
-import com.scm.backend.model.exception.CustomerNumberAlreadyExistException;
-import com.scm.backend.model.exception.DeleteException;
-import com.scm.backend.model.exception.SupplierNumberAlreadyExist;
+import com.scm.backend.model.exception.*;
 import com.scm.backend.service.CustomerService;
 import com.scm.backend.service.SupplierService;
 import com.scm.backend.util.CustomerDtoMapper;
@@ -39,6 +38,13 @@ public class CustomerController {
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
     }
 
+    @PutMapping
+    public ResponseEntity<ResponseDto> updateCustomer(@Valid @RequestBody CustomerDto customerDto) throws ConcurrentUpdateItemException, UpdateException {
+        customerService.updateCustomer(customerDto);
+        ResponseDto responseDto = new ResponseDto("Update successfully", HttpStatus.OK, null);
+        return new ResponseEntity<>(responseDto, HttpStatus.OK);
+    }
+
     @GetMapping("/getAllCustomer")
     public ResponseEntity<ResponseDto> getAllCustomer() {
         List<Customer> customerList = customerService.getCustomers();
@@ -49,7 +55,7 @@ public class CustomerController {
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
     }
 
-    @GetMapping("/delete/{customerId}")
+    @DeleteMapping("/delete/{customerId}")
     public ResponseEntity<ResponseDto> deleteCustomer(@PathVariable("customerId") Long customerId) throws DeleteException {
         customerService.deleteCustomer(customerId);
 

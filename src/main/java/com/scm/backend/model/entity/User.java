@@ -32,7 +32,6 @@ public class User extends SupperEntity implements UserDetails {
     private String email;
 
     @Column
-    @Pattern(regexp="(^$|[0-9]{10})")
     @Size(min = 10, max = 11)
     private String phoneNumber;
 

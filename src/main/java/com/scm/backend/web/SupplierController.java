@@ -4,9 +4,7 @@ import com.scm.backend.model.dto.*;
 import com.scm.backend.model.entity.Customer;
 import com.scm.backend.model.entity.Item;
 import com.scm.backend.model.entity.Supplier;
-import com.scm.backend.model.exception.DeleteException;
-import com.scm.backend.model.exception.ItemNumberNotFoundException;
-import com.scm.backend.model.exception.SupplierNumberAlreadyExist;
+import com.scm.backend.model.exception.*;
 import com.scm.backend.service.SupplierService;
 import com.scm.backend.util.InternalState;
 import com.scm.backend.util.SupplierDtoMapper;
@@ -39,6 +37,13 @@ public class SupplierController {
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
     }
 
+    @PutMapping
+    public ResponseEntity<ResponseDto> updateSupplier(@Valid @RequestBody SupplierDto supplierDto) throws ConcurrentUpdateItemException, UpdateException {
+        supplierService.updateSupplier(supplierDto);
+        ResponseDto responseDto = new ResponseDto("Update successfully", HttpStatus.OK, null);
+        return new ResponseEntity<>(responseDto, HttpStatus.OK);
+    }
+
     @GetMapping("/getAllSupplier")
     public ResponseEntity<ResponseDto> getAllSupplier() {
         List<Supplier> supplierList = supplierService.getAllSupplier();
@@ -49,7 +54,7 @@ public class SupplierController {
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
     }
 
-    @GetMapping("/delete/{supplierId}")
+    @DeleteMapping("/delete/{supplierId}")
     public ResponseEntity<ResponseDto> getUserByUsername(@PathVariable("supplierId") Long supplierId) throws DeleteException {
         supplierService.deleteSupplier(supplierId);
 

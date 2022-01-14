@@ -110,7 +110,7 @@ public class UserServiceImpl implements UserService {
 
     private void updateUserWithNewData(User user, UserDto userDto) throws UpdateException {
 
-        if(StringUtils.isNotBlank(userDto.getPassword())){
+        if(userDto.getPassword() != null){
             if(bCryptPasswordEncoder.matches(userDto.getOldPassword(), user.getPassword())){
                 user.setPassword(bCryptPasswordEncoder.encode(userDto.getPassword()));
             } else {
