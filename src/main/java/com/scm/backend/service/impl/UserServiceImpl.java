@@ -84,9 +84,19 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User updateUser(UserDto userDto, String currentUsername) throws UsernameNotExistException, UpdateException, ConcurrentUpdateException, EmailNotExistException {
+        boolean isManager = false;
+
+        User currentUser = userRepository.findUserByUsername(currentUsername)
+                .orElseThrow(() -> new UsernameNotExistException("Current username not exist while update info", currentUsername));
+        if(!currentUser.getUserRoleList().isEmpty()) {
+            if (StringUtils.equals(currentUser.getUserRoleList().get(0).getKey().getRole().getName(), "Quản lý")) { // is manager
+                isManager = true;
+            }
+        }
+
         User user = checkBeforeUpdate(userDto, currentUsername);
 
-        updateUserWithNewData(user, userDto);
+        updateUserWithNewData(user, userDto, isManager);
 
         return user;
     }
@@ -108,13 +118,19 @@ public class UserServiceImpl implements UserService {
         }
     }
 
-    private void updateUserWithNewData(User user, UserDto userDto) throws UpdateException {
+    private void updateUserWithNewData(User user, UserDto userDto, boolean isManager) throws UpdateException {
 
-        if(userDto.getPassword() != null){
-            if(bCryptPasswordEncoder.matches(userDto.getOldPassword(), user.getPassword())){
+        if(isManager){
+            if(userDto.getPassword() != null){
                 user.setPassword(bCryptPasswordEncoder.encode(userDto.getPassword()));
-            } else {
-                throw new UpdateException("Incorrect current password");
+            }
+        } else {
+            if(userDto.getPassword() != null){
+                if(bCryptPasswordEncoder.matches(userDto.getOldPassword(), user.getPassword())){
+                    user.setPassword(bCryptPasswordEncoder.encode(userDto.getPassword()));
+                } else {
+                    throw new UpdateException("Incorrect current password");
+                }
             }
         }
 

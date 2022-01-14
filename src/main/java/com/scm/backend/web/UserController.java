@@ -139,6 +139,17 @@ public class UserController {
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
     }
 
+    @PutMapping("/update/admin")
+    public ResponseEntity<ResponseDto> updateUserByADMIN(@Valid @RequestBody UserDto userDto, Principal principal)
+            throws UsernameNotExistException, UpdateException, ConcurrentUpdateException, EmailNotExistException {
+        String currentUsername = principal.getName();
+
+        userService.updateUser(userDto, currentUsername);
+
+        ResponseDto responseDto = new ResponseDto("Update successfully", HttpStatus.OK, null);
+        return new ResponseEntity<>(responseDto, HttpStatus.OK);
+    }
+
     @DeleteMapping("/delete/{username}")
     public ResponseEntity<ResponseDto> deleteUser(@PathVariable("username") String username, Principal principal) throws DeleteException {
         String currentUsername = principal.getName();
