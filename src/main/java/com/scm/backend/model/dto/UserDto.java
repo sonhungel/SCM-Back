@@ -22,6 +22,7 @@ public class UserDto extends SupperDto {
     private String fullName;
 
     private String password;
+    private String oldPassword;
 
     private String email;
 

@@ -108,10 +108,14 @@ public class UserServiceImpl implements UserService {
         }
     }
 
-    private void updateUserWithNewData(User user, UserDto userDto) {
+    private void updateUserWithNewData(User user, UserDto userDto) throws UpdateException {
 
         if(StringUtils.isNotBlank(userDto.getPassword())){
-            user.setPassword(bCryptPasswordEncoder.encode(userDto.getPassword()));
+            if(bCryptPasswordEncoder.matches(userDto.getOldPassword(), user.getPassword())){
+                user.setPassword(bCryptPasswordEncoder.encode(userDto.getPassword()));
+            } else {
+                throw new UpdateException("Incorrect current password");
+            }
         }
 
         user.setFullName(userDto.getFullName());

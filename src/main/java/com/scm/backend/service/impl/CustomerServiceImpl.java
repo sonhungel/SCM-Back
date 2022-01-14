@@ -4,11 +4,13 @@ import com.scm.backend.model.dto.CustomerDto;
 import com.scm.backend.model.entity.Customer;
 import com.scm.backend.model.entity.Supplier;
 import com.scm.backend.model.exception.CustomerNumberAlreadyExistException;
+import com.scm.backend.model.exception.DeleteException;
 import com.scm.backend.model.exception.SupplierNumberAlreadyExist;
 import com.scm.backend.repository.CustomerRepository;
 import com.scm.backend.repository.UserRepository;
 import com.scm.backend.service.CustomerService;
 import com.scm.backend.util.CustomerDtoMapper;
+import com.scm.backend.util.InternalState;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -36,7 +38,16 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public List<Customer> getCustomers() {
-        return customerRepository.findAll();
+        return customerRepository.getAllActiveCustomer();
+    }
+
+    @Override
+    public void deleteCustomer(Long customerId) throws DeleteException {
+        Customer customer = customerRepository.findById(customerId).orElseThrow(()
+                -> new DeleteException("Customer not found when delete"));
+
+        customer.setInternalState(InternalState.DELETED);
+        customerRepository.saveAndFlush(customer);
     }
 
     private Customer createNewWithDtoData(CustomerDto customerDto) {

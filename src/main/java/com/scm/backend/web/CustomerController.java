@@ -5,6 +5,7 @@ import com.scm.backend.model.dto.ResponseDto;
 import com.scm.backend.model.dto.SupplierDto;
 import com.scm.backend.model.entity.Customer;
 import com.scm.backend.model.exception.CustomerNumberAlreadyExistException;
+import com.scm.backend.model.exception.DeleteException;
 import com.scm.backend.model.exception.SupplierNumberAlreadyExist;
 import com.scm.backend.service.CustomerService;
 import com.scm.backend.service.SupplierService;
@@ -45,6 +46,14 @@ public class CustomerController {
         List<CustomerDto> customerDtoList = customerDtoMapper.toCustomerDtoList(customerList);
 
         ResponseDto responseDto = new ResponseDto("Get successfully", HttpStatus.OK, customerDtoList);
+        return new ResponseEntity<>(responseDto, HttpStatus.OK);
+    }
+
+    @GetMapping("/delete/{customerId}")
+    public ResponseEntity<ResponseDto> deleteCustomer(@PathVariable("customerId") Long customerId) throws DeleteException {
+        customerService.deleteCustomer(customerId);
+
+        ResponseDto responseDto = new ResponseDto("Update successfully", HttpStatus.OK, null);
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
     }
 }

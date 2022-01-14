@@ -2,9 +2,11 @@ package com.scm.backend.service.impl;
 
 import com.scm.backend.model.dto.SupplierDto;
 import com.scm.backend.model.entity.Supplier;
+import com.scm.backend.model.exception.DeleteException;
 import com.scm.backend.model.exception.SupplierNumberAlreadyExist;
 import com.scm.backend.repository.SupplierRepository;
 import com.scm.backend.service.SupplierService;
+import com.scm.backend.util.InternalState;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,7 +28,17 @@ public class SupplierServiceImpl implements SupplierService {
 
     @Override
     public List<Supplier> getAllSupplier() {
-        return supplierRepository.findAll();
+        return supplierRepository.getAllActiveSupplier();
+    }
+
+    @Override
+    public void deleteSupplier(Long supplierId) throws DeleteException {
+        Supplier supplier = supplierRepository.findById(supplierId).orElseThrow(()
+                -> new DeleteException("Supplier not found when delete"));
+
+        supplier.setInternalState(InternalState.DELETED);
+        supplierRepository.saveAndFlush(supplier);
+
     }
 
     private Supplier createNewItemWithDtoData(SupplierDto supplierDto) {
