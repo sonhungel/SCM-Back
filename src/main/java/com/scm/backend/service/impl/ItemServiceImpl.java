@@ -97,6 +97,13 @@ public class ItemServiceImpl implements ItemService {
         final Supplier supplier = supplierRepository.findSupplierBySupplierNumber(itemDto.getSupplier().getSupplierNumber())
                 .orElseThrow(() -> new SupplierNotFoundException("Supplier not found", itemDto.getSupplier().getSupplierNumber()));
 
+        if(supplier.getPaid() == null){
+            supplier.setPaid(0L);
+        }
+        supplier.setLatestSupply(LocalDate.now());
+        supplier.setPaid(supplier.getPaid() + (itemDto.getCost()) * itemDto.getQuantity());
+        supplierRepository.saveAndFlush(supplier);
+
         itemDto.setAvailableQuantity(itemDto.getQuantity());
 
         return Item.builder()

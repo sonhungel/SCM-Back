@@ -56,8 +56,12 @@ public class SupTicketServiceImpl implements SupTicketService {
         item.setUpdateDate(LocalDate.now());
         itemRepository.saveAndFlush(item);
 
+        if(supplier.getPaid() == null){
+            supplier.setPaid(0L);
+        }
         supplier.setLatestSupply(LocalDate.now());
         supplier.setUpdateDate(LocalDate.now());
+        supplier.setPaid(supplier.getPaid() + suptTicketDto.getCost());
         supplierRepository.saveAndFlush(supplier);
 
         return SupTicket.builder()
