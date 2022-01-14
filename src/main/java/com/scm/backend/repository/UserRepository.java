@@ -30,6 +30,9 @@ public interface UserRepository extends JpaRepository<User, Long>, QuerydslPredi
     @Query(value = "select max(id) from item", nativeQuery = true)
     int getLatestItemId();
 
+    @Query(value = "select max(id) from customer", nativeQuery = true)
+    int getLatestCustomerId();
+
 
     @Modifying
     @Query(value = "UPDATE ITEM " +

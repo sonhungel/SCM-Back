@@ -6,6 +6,7 @@ import com.scm.backend.model.entity.Supplier;
 import com.scm.backend.model.exception.CustomerNumberAlreadyExistException;
 import com.scm.backend.model.exception.SupplierNumberAlreadyExist;
 import com.scm.backend.repository.CustomerRepository;
+import com.scm.backend.repository.UserRepository;
 import com.scm.backend.service.CustomerService;
 import com.scm.backend.util.CustomerDtoMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +24,9 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Autowired
     private CustomerDtoMapper customerDtoMapper;
+
+    @Autowired
+    private UserRepository userRepository;
 
     @Override
     public Customer createCustomer(CustomerDto customerDto) throws CustomerNumberAlreadyExistException {
@@ -43,6 +47,10 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     private Customer createNewCustomer(CustomerDto customerDto) {
+        if(customerDto.getCustomerNumber() == null){
+            int max = userRepository.getLatestCustomerId();
+            customerDto.setCustomerNumber(max + 1);
+        }
         return Customer.builder()
                 .customerNumber(customerDto.getCustomerNumber())
                 .name(customerDto.getName())
