@@ -132,7 +132,7 @@ public class ItemServiceImpl implements ItemService {
         }
 
         if(itemDto.getItemNumber() == null) {
-            int max = userRepository.getLatestItemId();
+            int max = userRepository.getLatestItemNumber();
             itemDto.setItemNumber(max + 1);
         }
 

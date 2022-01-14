@@ -58,10 +58,7 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     private Customer createNewCustomer(CustomerDto customerDto) {
-        if(customerDto.getCustomerNumber() == null){
-            int max = userRepository.getLatestCustomerId();
-            customerDto.setCustomerNumber(max + 1);
-        }
+
         return Customer.builder()
                 .customerNumber(customerDto.getCustomerNumber())
                 .name(customerDto.getName())
@@ -87,7 +84,7 @@ public class CustomerServiceImpl implements CustomerService {
         }
 
         if(customerDto.getCustomerNumber() == null) {
-            int max = userRepository.getLatestItemId();
+            int max = userRepository.getLatestCustomerNumber();
             customerDto.setCustomerNumber(max + 1);
         }
     }

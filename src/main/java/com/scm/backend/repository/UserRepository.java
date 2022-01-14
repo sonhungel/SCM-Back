@@ -27,14 +27,14 @@ public interface UserRepository extends JpaRepository<User, Long>, QuerydslPredi
     @Query(value = "select sum(paid) from invoice where added_date = :date and status = 'CLOSED';", nativeQuery = true)
     List<DailyReportDto> getDailyCost(@Param("date") LocalDate date);
 
-    @Query(value = "select max(id) from item", nativeQuery = true)
-    int getLatestItemId();
+    @Query(value = "select max(item_number) from item", nativeQuery = true)
+    int getLatestItemNumber();
 
-    @Query(value = "select max(id) from customer", nativeQuery = true)
-    int getLatestCustomerId();
+    @Query(value = "select max(customer_number) from customer", nativeQuery = true)
+    int getLatestCustomerNumber();
 
-    @Query(value = "select max(id) from supplier", nativeQuery = true)
-    int getLatestSupplierId();
+    @Query(value = "select max(supplier_number) from supplier", nativeQuery = true)
+    int getLatestSupplierNumber();
 
 
     @Modifying

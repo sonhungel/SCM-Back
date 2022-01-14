@@ -79,7 +79,7 @@ public class SupplierServiceImpl implements SupplierService {
         }
 
         if(supplierDto.getSupplierNumber() == null) {
-            int max = userRepository.getLatestSupplierId();
+            int max = userRepository.getLatestSupplierNumber();
             supplierDto.setSupplierNumber(max + 1);
         }
     }
