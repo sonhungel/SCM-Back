@@ -9,6 +9,7 @@ import com.scm.backend.repository.CustomerRepository;
 import com.scm.backend.repository.InvoiceRepository;
 import com.scm.backend.repository.UserRepository;
 import com.scm.backend.service.InvoiceService;
+import com.scm.backend.util.InternalState;
 import com.scm.backend.util.InvoiceState;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -66,6 +67,7 @@ public class InvoiceServiceImpl implements InvoiceService {
                 .customer(customer)
                 .paid(0L)
                 .status(InvoiceState.OPEN)
+                .internalState(InternalState.ACTIVE)
                 .addedDate(LocalDate.now())
                 .build();
 

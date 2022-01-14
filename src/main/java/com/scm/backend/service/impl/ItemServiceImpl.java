@@ -12,6 +12,7 @@ import com.scm.backend.repository.UserRepository;
 import com.scm.backend.repository.custom.ItemRepositoryCustom;
 import com.scm.backend.service.ItemService;
 import com.scm.backend.service.ItemTypeService;
+import com.scm.backend.util.InternalState;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -122,6 +123,7 @@ public class ItemServiceImpl implements ItemService {
                 .description(itemDto.getDescription())
                 .remark(itemDto.getRemark())
                 .addedDate(LocalDate.now())
+                .internalState(InternalState.ACTIVE)
                 .build()
                 ;
     }

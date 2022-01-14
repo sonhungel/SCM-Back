@@ -209,6 +209,7 @@ public class UserServiceImpl implements UserService {
                 .ward(userDto.getWard())
                 .confirmPassword(userDto.getConfirmPassword())
                 .addedDate(LocalDate.now())
+                .internalState(InternalState.ACTIVE)
                 .build();
     }
 

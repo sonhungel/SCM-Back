@@ -106,6 +106,7 @@ public class SupplierServiceImpl implements SupplierService {
                 .remark(supplierDto.getRemark())
                 .paid(0L)
                 .addedDate(LocalDate.now())
+                .internalState(InternalState.ACTIVE)
                 .build()
                 ;
     }

@@ -110,6 +110,7 @@ public class CustomerServiceImpl implements CustomerService {
                 .remark(customerDto.getRemark())
                 .paid(0L)
                 .addedDate(LocalDate.now())
+                .internalState(InternalState.ACTIVE)
                 .build()
                 ;
     }
