@@ -5,6 +5,7 @@ import com.scm.backend.model.entity.Supplier;
 import com.scm.backend.model.exception.DeleteException;
 import com.scm.backend.model.exception.SupplierNumberAlreadyExist;
 import com.scm.backend.repository.SupplierRepository;
+import com.scm.backend.repository.UserRepository;
 import com.scm.backend.service.SupplierService;
 import com.scm.backend.util.InternalState;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,9 @@ import java.util.List;
 public class SupplierServiceImpl implements SupplierService {
     @Autowired
     private SupplierRepository supplierRepository;
+
+    @Autowired
+    private UserRepository userRepository;
 
     @Override
     public Supplier createSupplier(SupplierDto supplierDto) throws SupplierNumberAlreadyExist {
@@ -72,6 +76,11 @@ public class SupplierServiceImpl implements SupplierService {
     private void checkBeforeCreate(SupplierDto supplierDto) throws SupplierNumberAlreadyExist {
         if (supplierRepository.findSupplierBySupplierNumber(supplierDto.getSupplierNumber()).isPresent()){
             throw new SupplierNumberAlreadyExist("Supplier number already exist.", supplierDto.getSupplierNumber());
+        }
+
+        if(supplierDto.getSupplierNumber() == null) {
+            int max = userRepository.getLatestSupplierId();
+            supplierDto.setSupplierNumber(max + 1);
         }
     }
 }

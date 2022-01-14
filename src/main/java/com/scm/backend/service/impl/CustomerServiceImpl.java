@@ -85,5 +85,10 @@ public class CustomerServiceImpl implements CustomerService {
         if (customerRepository.findCustomerByCustomerNumber(customerDto.getCustomerNumber()).isPresent()){
             throw new CustomerNumberAlreadyExistException("Customer number already exist.", customerDto.getCustomerNumber());
         }
+
+        if(customerDto.getCustomerNumber() == null) {
+            int max = userRepository.getLatestItemId();
+            customerDto.setCustomerNumber(max + 1);
+        }
     }
 }
