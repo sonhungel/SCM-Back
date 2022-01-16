@@ -7,5 +7,11 @@ import java.util.List;
 
 
 public interface ReportService {
-    List<DailyReportDto> getDailyReport(LocalDate today);
+    List<DailyReportDto> getDailyPaidReport(LocalDate today);
+
+    List<DailyReportDto> getDailyCostReport(LocalDate today);
+
+    List<DailyReportDto> getWeeklyPaidReport(LocalDate today);
+
+    List<DailyReportDto> getWeeklyCostReport(LocalDate today);
 }

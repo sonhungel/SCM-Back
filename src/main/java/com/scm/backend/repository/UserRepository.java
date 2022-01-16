@@ -21,11 +21,19 @@ public interface UserRepository extends JpaRepository<User, Long>, QuerydslPredi
     Optional<User> findUserById(Long id);
 
 
-    @Query(value = "select sum(paid) from invoice where added_date = :date and status = 'CLOSED';", nativeQuery = true)
+    @Query(value = "select sum(paid) as paid from invoice where added_date = :date and status = 'CLOSED';", nativeQuery = true)
     List<DailyReportDto> getDailyPaid(@Param("date") LocalDate date);
 
-    @Query(value = "select sum(paid) from invoice where added_date = :date and status = 'CLOSED';", nativeQuery = true)
+    @Query(value = "select sum(cost) as cost from sup_ticket where added_date = :date ;", nativeQuery = true)
     List<DailyReportDto> getDailyCost(@Param("date") LocalDate date);
+
+    @Query(value = "select sum(paid) as paid, added_date as date from invoice where added_date between :fromDate and :toDate " +
+            " group by added_date;", nativeQuery = true)
+    List<DailyReportDto> getWeeklyPaidReport(@Param("fromDate") LocalDate fromDate, @Param("toDate") LocalDate toDate);
+
+    @Query(value = "select sum(cost) as cost, added_date as date from sup_ticket where added_date between :fromDate and :toDate " +
+            " group by added_date;", nativeQuery = true)
+    List<DailyReportDto> getWeeklyCostReport(@Param("fromDate") LocalDate fromDate, @Param("toDate") LocalDate toDate);
 
     @Query(value = "select max(item_number) from item", nativeQuery = true)
     int getLatestItemNumber();
