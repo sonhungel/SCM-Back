@@ -2,6 +2,9 @@ package com.scm.backend.service.impl;
 
 import com.google.common.collect.Sets;
 import com.scm.backend.model.dto.ItemDto;
+import com.scm.backend.model.dto.ItemRefDto;
+import com.scm.backend.model.dto.SupplierDto;
+import com.scm.backend.model.dto.SuptTicketDto;
 import com.scm.backend.model.entity.Item;
 import com.scm.backend.model.entity.ItemType;
 import com.scm.backend.model.entity.Supplier;
@@ -12,6 +15,7 @@ import com.scm.backend.repository.UserRepository;
 import com.scm.backend.repository.custom.ItemRepositoryCustom;
 import com.scm.backend.service.ItemService;
 import com.scm.backend.service.ItemTypeService;
+import com.scm.backend.service.SupTicketService;
 import com.scm.backend.util.InternalState;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -38,8 +42,11 @@ public class ItemServiceImpl implements ItemService {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private SupTicketService supTicketService;
+
     @Override
-    public void createItem(ItemDto itemDto) throws ItemNumberAlreadyExistException, ItemNumberLessThanOne, ItemTypeNotFoundException, SupplierNotFoundException {
+    public void createItem(ItemDto itemDto) throws ItemNumberAlreadyExistException, ItemNumberLessThanOne, ItemTypeNotFoundException, SupplierNotFoundException, CreateException {
         checkBeforeCreate(itemDto);
         createNewItemWithDtoData(itemDto);
     }
@@ -85,10 +92,25 @@ public class ItemServiceImpl implements ItemService {
         return item;
     }
 
-    private void createNewItemWithDtoData(ItemDto itemDto) throws ItemTypeNotFoundException, SupplierNotFoundException {
+    private void createNewItemWithDtoData(ItemDto itemDto) throws ItemTypeNotFoundException, SupplierNotFoundException, CreateException {
         final Item item = createNewItem(itemDto);
 
         itemRepository.saveAndFlush(item);
+
+        SuptTicketDto suptTicketDto = new SuptTicketDto();
+
+        ItemRefDto itemRefDto = new ItemRefDto();
+        itemRefDto.setId(item.getId());
+        SupplierDto supplierDto = new SupplierDto();
+        supplierDto.setId(item.getSupplier().getId());
+
+        suptTicketDto.setItem(itemRefDto);
+        suptTicketDto.setSupplier(supplierDto);
+        suptTicketDto.setQuantity(itemDto.getQuantity());
+        suptTicketDto.setCost(itemDto.getCost() * itemDto.getQuantity());
+        suptTicketDto.setRemark("Nhập lần đầu");
+
+        supTicketService.createSupTicket(suptTicketDto);
     }
 
     private Item createNewItem(ItemDto itemDto) throws ItemTypeNotFoundException, SupplierNotFoundException {
@@ -98,12 +120,12 @@ public class ItemServiceImpl implements ItemService {
         final Supplier supplier = supplierRepository.findSupplierBySupplierNumber(itemDto.getSupplier().getSupplierNumber())
                 .orElseThrow(() -> new SupplierNotFoundException("Supplier not found", itemDto.getSupplier().getSupplierNumber()));
 
-        if(supplier.getPaid() == null){
+        /*if(supplier.getPaid() == null){
             supplier.setPaid(0L);
         }
         supplier.setLatestSupply(LocalDate.now());
         supplier.setPaid(supplier.getPaid() + (itemDto.getCost()) * itemDto.getQuantity());
-        supplierRepository.saveAndFlush(supplier);
+        supplierRepository.saveAndFlush(supplier);*/
 
         itemDto.setAvailableQuantity(itemDto.getQuantity());
 
@@ -113,8 +135,10 @@ public class ItemServiceImpl implements ItemService {
                 .state(itemDto.getState())
                 .addedDate(itemDto.getAddedDate())
                 .updateDate(itemDto.getUpdateDate())
-                .quantity(itemDto.getQuantity())
-                .availableQuantity(itemDto.getAvailableQuantity())
+                //.quantity(itemDto.getQuantity())
+                //.availableQuantity(itemDto.getAvailableQuantity())
+                .quantity(0L)
+                .availableQuantity(0L)
                 .minimumQuantity(itemDto.getMinimumQuantity())
                 .salesPrice(itemDto.getSalesPrice())
                 .cost(itemDto.getCost())

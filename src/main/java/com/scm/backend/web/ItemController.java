@@ -29,7 +29,7 @@ public class ItemController {
 
     @PostMapping
     public ResponseEntity<ResponseDto> createItem(@Valid @RequestBody ItemDto itemDto)
-            throws ItemNumberLessThanOne, ItemNumberAlreadyExistException, ItemTypeNotFoundException, SupplierNotFoundException {
+            throws ItemNumberLessThanOne, ItemNumberAlreadyExistException, ItemTypeNotFoundException, SupplierNotFoundException, CreateException {
         itemService.createItem(itemDto);
         ResponseDto responseDto = new ResponseDto("Create successfully", HttpStatus.OK, null);
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
