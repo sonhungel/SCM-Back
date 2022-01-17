@@ -133,8 +133,6 @@ public class ItemServiceImpl implements ItemService {
                 .itemNumber(itemDto.getItemNumber())
                 .name(itemDto.getName())
                 .state(itemDto.getState())
-                .addedDate(itemDto.getAddedDate())
-                .updateDate(itemDto.getUpdateDate())
                 //.quantity(itemDto.getQuantity())
                 //.availableQuantity(itemDto.getAvailableQuantity())
                 .quantity(0L)
@@ -147,6 +145,7 @@ public class ItemServiceImpl implements ItemService {
                 .description(itemDto.getDescription())
                 .remark(itemDto.getRemark())
                 .addedDate(LocalDate.now())
+                .updateDate(LocalDate.now())
                 .internalState(InternalState.ACTIVE)
                 .build()
                 ;
