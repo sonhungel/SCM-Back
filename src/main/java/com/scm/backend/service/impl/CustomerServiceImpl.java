@@ -94,6 +94,9 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     private Customer createNewCustomer(CustomerDto customerDto) {
+        if(customerDto.getTaxNumber() == null){
+            customerDto.setTaxNumber("");
+        }
 
         return Customer.builder()
                 .customerNumber(customerDto.getCustomerNumber())

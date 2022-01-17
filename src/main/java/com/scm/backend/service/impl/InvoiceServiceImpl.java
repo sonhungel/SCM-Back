@@ -62,6 +62,8 @@ public class InvoiceServiceImpl implements InvoiceService {
         Customer customer = customerRepository.findCustomerByCustomerNumber(invoiceDto.getCustomer().getCustomerNumber())
                 .orElseThrow(() -> new CustomerNumberNotFoundException("Customer not found", invoiceDto.getCustomer().getCustomerNumber()));
 
+
+
         Invoice invoice = Invoice.builder()
                 .user(user)
                 .customer(customer)
