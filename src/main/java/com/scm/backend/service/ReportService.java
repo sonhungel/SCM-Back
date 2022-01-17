@@ -14,4 +14,6 @@ public interface ReportService {
     List<DailyReportDto> getWeeklyPaidReport(LocalDate today);
 
     List<DailyReportDto> getWeeklyCostReport(LocalDate today);
+
+    List<List<List<DailyReportDto>>> getMonthlyPaidReport(LocalDate now);
 }

@@ -95,4 +95,14 @@ public class ReportController {
         ResponseDto responseDto = new ResponseDto("Create successfully", HttpStatus.OK, reportDto);
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
     }
+
+    @GetMapping("/monthlyReport")
+    public ResponseEntity<ResponseDto> getMonthlyReport() {
+        List<List<List<DailyReportDto>>> lists = reportService.getMonthlyPaidReport(LocalDate.now());
+
+
+
+        ResponseDto responseDto = new ResponseDto("Create successfully", HttpStatus.OK, lists);
+        return new ResponseEntity<>(responseDto, HttpStatus.OK);
+    }
 }

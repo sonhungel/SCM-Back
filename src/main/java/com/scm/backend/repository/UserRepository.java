@@ -35,6 +35,22 @@ public interface UserRepository extends JpaRepository<User, Long>, QuerydslPredi
             " group by added_date;", nativeQuery = true)
     List<DailyReportDto> getWeeklyCostReport(@Param("fromDate") LocalDate fromDate, @Param("toDate") LocalDate toDate);
 
+    @Query(value = "select sum(cost) as cost from sup_ticket where added_date between :fromDate and :toDate " +
+            " ;", nativeQuery = true)
+    List<DailyReportDto> getMonthlyCostReport(@Param("fromDate") LocalDate fromDate, @Param("toDate") LocalDate toDate);
+
+    @Query(value = "select sum(paid) as paid from invoice where added_date between :fromDate and :toDate " +
+            " ;", nativeQuery = true)
+    List<DailyReportDto> getMonthlyPaidReport(@Param("fromDate") LocalDate fromDate, @Param("toDate") LocalDate toDate);
+
+    @Query(value = "select sum(paid) as paid, added_date as date from invoice where added_date between :fromDate and :toDate " +
+            " group by added_date;", nativeQuery = true)
+    List<DailyReportDto> getPaidReport(@Param("fromDate") LocalDate fromDate, @Param("toDate") LocalDate toDate);
+
+    @Query(value = "select sum(cost) as cost, added_date as date from sup_ticket where added_date between :fromDate and :toDate " +
+            " group by added_date;", nativeQuery = true)
+    List<DailyReportDto> getCostReport(@Param("fromDate") LocalDate fromDate, @Param("toDate") LocalDate toDate);
+
     @Query(value = "select max(item_number) from item", nativeQuery = true)
     int getLatestItemNumber();
 

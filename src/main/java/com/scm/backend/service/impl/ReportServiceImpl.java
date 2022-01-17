@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -99,5 +100,42 @@ public class ReportServiceImpl implements ReportService {
         List<DailyReportDto> weeklyList = userRepository.getWeeklyCostReport(fromDay, today);
 
         return weeklyList;
+    }
+
+    @Override
+    public List<List<List<DailyReportDto>>> getMonthlyPaidReport(LocalDate now) {
+        List<List<DailyReportDto>> listPaidResult = new ArrayList<>();
+        List<List<DailyReportDto>> listCostResult = new ArrayList<>();
+        List<List<List<DailyReportDto>>> listResult = new ArrayList<>();
+
+        List<DailyReportDto> listPaid1 = userRepository.getMonthlyPaidReport(now.minusDays(6), now);
+        List<DailyReportDto> listPaid2 = userRepository.getMonthlyPaidReport(now.minusDays(12), now.minusDays(6));
+        List<DailyReportDto> listPaid3 = userRepository.getMonthlyPaidReport(now.minusDays(18), now.minusDays(12));
+        List<DailyReportDto> listPaid4 = userRepository.getMonthlyPaidReport(now.minusDays(24), now.minusDays(18));
+        List<DailyReportDto> listPaid5 = userRepository.getMonthlyPaidReport(now.minusDays(30), now.minusDays(24));
+
+        List<DailyReportDto> listCost1 = userRepository.getMonthlyCostReport(now.minusDays(6), now);
+        List<DailyReportDto> listCost2 = userRepository.getMonthlyCostReport(now.minusDays(12), now.minusDays(6));
+        List<DailyReportDto> listCost3 = userRepository.getMonthlyCostReport(now.minusDays(18), now.minusDays(12));
+        List<DailyReportDto> listCost4 = userRepository.getMonthlyCostReport(now.minusDays(24), now.minusDays(18));
+        List<DailyReportDto> listCost5 = userRepository.getMonthlyCostReport(now.minusDays(30), now.minusDays(24));
+
+
+        listPaidResult.add(listPaid1);
+        listPaidResult.add(listPaid2);
+        listPaidResult.add(listPaid3);
+        listPaidResult.add(listPaid4);
+        listPaidResult.add(listPaid5);
+
+        listCostResult.add(listCost1);
+        listCostResult.add(listCost2);
+        listCostResult.add(listCost3);
+        listCostResult.add(listCost4);
+        listCostResult.add(listCost5);
+
+        listResult.add(listPaidResult);
+        listResult.add(listCostResult);
+
+        return listResult;
     }
 }
