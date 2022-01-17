@@ -63,7 +63,7 @@ public class InvoiceServiceImpl implements InvoiceService {
                 .orElseThrow(() -> new CustomerNumberNotFoundException("Customer not found", invoiceDto.getCustomer().getCustomerNumber()));
 
 
-        LocalDate date = LocalDate.of(2022, 01, 10);
+        LocalDate date = LocalDate.of(2022, 01, 0);
         Invoice invoice = Invoice.builder()
                 .user(user)
                 .customer(customer)
