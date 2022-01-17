@@ -63,15 +63,13 @@ public class InvoiceServiceImpl implements InvoiceService {
                 .orElseThrow(() -> new CustomerNumberNotFoundException("Customer not found", invoiceDto.getCustomer().getCustomerNumber()));
 
 
-        LocalDate date = LocalDate.of(2021, 12, 21);
         Invoice invoice = Invoice.builder()
                 .user(user)
                 .customer(customer)
                 .paid(0L)
                 .status(InvoiceState.OPEN)
                 .internalState(InternalState.ACTIVE)
-                //.addedDate(LocalDate.now())
-                .addedDate(date)
+                .addedDate(LocalDate.now())
                 .build();
 
         invoiceRepository.saveAndFlush(invoice);
