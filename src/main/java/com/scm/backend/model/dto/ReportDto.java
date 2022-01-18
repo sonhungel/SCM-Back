@@ -6,4 +6,6 @@ public interface ReportDto {
     DailyReportDto getDaily();
 
     WeeklyReportDto getWeekly();
+
+    MonthlyReportDto getMonthly();
 }

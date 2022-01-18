@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -39,6 +41,28 @@ public class ReportController {
 
         List<User> userList = userService.getAllUser().stream().filter(e ->
                 e.getInternalState() != InternalState.DELETED).collect(Collectors.toList());
+
+        List<List<List<DailyReportDto>>> listMonthlyReport = reportService.getMonthlyPaidReport(LocalDate.now());
+
+        List<Long> totalMonthlyPaidList = new ArrayList<>();
+        Long totalMonthlyPaid = 0L;
+        if(!listMonthlyReport.get(0).isEmpty()){
+            totalMonthlyPaidList = listMonthlyReport.get(0).stream()
+                    .filter(e -> e.get(0) != null)
+                    .map(e -> e.get(0).getPaid())
+                    .collect(Collectors.toList());
+            totalMonthlyPaid = totalMonthlyPaidList.stream().reduce(0L, Long::sum);
+        }
+
+        List<Long> totalMonthlyCostList = new ArrayList<>();
+        Long totalMonthlyCost = 0L;
+        if(!listMonthlyReport.get(1).isEmpty()){
+            totalMonthlyCostList = listMonthlyReport.get(1).stream()
+                    .filter(e -> e.get(0) != null)
+                    .map(e -> e.get(0).getCost())
+                    .collect(Collectors.toList());
+            totalMonthlyCost = totalMonthlyCostList.stream().reduce(0L, Long::sum);
+        }
 
         DailyReportDto dailyReportDto = new DailyReportDto() {
             @Override
@@ -96,6 +120,8 @@ public class ReportController {
             }
         };
 
+        Long finalTotalMonthlyCost = totalMonthlyCost;
+        Long finalTotalMonthlyPaid = totalMonthlyPaid;
         ReportDto reportDto = new ReportDto() {
             @Override
             public DailyReportDto getDaily() {
@@ -105,6 +131,22 @@ public class ReportController {
             @Override
             public WeeklyReportDto getWeekly() {
                 return weeklyReportDto;
+            }
+
+            @Override
+            public MonthlyReportDto getMonthly() {
+                MonthlyReportDto monthlyReportDto = new MonthlyReportDto() {
+                    @Override
+                    public Long getCost() {
+                        return finalTotalMonthlyCost;
+                    }
+
+                    @Override
+                    public Long getPaid() {
+                        return finalTotalMonthlyPaid;
+                    }
+                };
+                return monthlyReportDto;
             }
         };
 
