@@ -1,10 +1,11 @@
 package com.scm.backend.web;
 
-import com.scm.backend.model.dto.DailyReportDto;
-import com.scm.backend.model.dto.ReportDto;
-import com.scm.backend.model.dto.ResponseDto;
-import com.scm.backend.model.dto.WeeklyReportDto;
+import com.scm.backend.model.dto.*;
+import com.scm.backend.model.entity.User;
 import com.scm.backend.service.ReportService;
+import com.scm.backend.service.UserService;
+import com.scm.backend.util.InternalState;
+import com.scm.backend.util.UserDtoMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/report")
@@ -22,12 +24,21 @@ public class ReportController {
     @Autowired
     private ReportService reportService;
 
+    @Autowired
+    private UserService userService;
+
+    @Autowired
+    private UserDtoMapper userDtoMapper;
+
     @GetMapping("/dailyReport")
     public ResponseEntity<ResponseDto> getReport() {
         List<DailyReportDto> dailyPaid = reportService.getDailyPaidReport(LocalDate.now());
         List<DailyReportDto> dailyCost = reportService.getDailyCostReport(LocalDate.now());
         List<DailyReportDto> weeklyPaid = reportService.getWeeklyPaidReport(LocalDate.now());
         List<DailyReportDto> weeklyCost = reportService.getWeeklyCostReport(LocalDate.now());
+
+        List<User> userList = userService.getAllUser().stream().filter(e ->
+                e.getInternalState() != InternalState.DELETED).collect(Collectors.toList());
 
         DailyReportDto dailyReportDto = new DailyReportDto() {
             @Override
@@ -60,6 +71,11 @@ public class ReportController {
             @Override
             public LocalDate getDate() {
                 return null;
+            }
+
+            @Override
+            public Long getUser() {
+                return (long) userList.size();
             }
 
             @Override

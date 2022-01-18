@@ -14,5 +14,7 @@ public interface DailyReportDto {
 
     LocalDate getDate();
 
+    Long getUser();
+
     String getStatus();
 }
