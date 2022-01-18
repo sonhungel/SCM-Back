@@ -9,6 +9,7 @@ import com.scm.backend.service.InvoiceService;
 import com.scm.backend.service.MapValidationErrorService;
 import com.scm.backend.util.InvoiceDtoMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -84,13 +85,18 @@ public class InvoiceController {
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
     }
 
-    @GetMapping("/getAllInvoice")
-    public ResponseEntity<ResponseDto> getAllInvoice() {
-        List<Invoice> invoiceList = invoiceService.getAllInvoice();
+    @GetMapping("/getAllInvoice/{pageNumber}")
+    public ResponseEntity<ResponseDto> getAllInvoice(@PathVariable int pageNumber) {
+        Page<Invoice> invoicePage = invoiceService.getAllInvoice(pageNumber);
 
-        List<InvoiceDto> invoiceDtoList = invoiceDtoMapper.toInvoiceDtoList(invoiceList);
+        PaginationDto paginationDto = new PaginationDto();
+        if(invoicePage.hasContent()) {
+            paginationDto.setData(invoiceDtoMapper.toInvoiceDtoList(invoicePage.getContent()));
+        }
+        paginationDto.setHasNext(invoicePage.hasNext());
+        paginationDto.setHasPrevious(invoicePage.hasPrevious());
 
-        ResponseDto responseDto = new ResponseDto("Get successfully", HttpStatus.OK, invoiceDtoList);
+        ResponseDto responseDto = new ResponseDto("Get successfully", HttpStatus.OK, paginationDto);
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
     }
 

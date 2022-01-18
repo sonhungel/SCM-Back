@@ -12,16 +12,22 @@ import com.scm.backend.service.InvoiceService;
 import com.scm.backend.util.InternalState;
 import com.scm.backend.util.InvoiceState;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
 @Transactional(rollbackFor = Exception.class)
 public class InvoiceServiceImpl implements InvoiceService {
+    private final int PAGE_SIZE = 15;
+
     @Autowired
     private UserRepository userRepository;
 
@@ -38,8 +44,9 @@ public class InvoiceServiceImpl implements InvoiceService {
     }
 
     @Override
-    public List<Invoice> getAllInvoice() {
-        return invoiceRepository.findAll();
+    public Page<Invoice> getAllInvoice(int pageNumber) {
+        Pageable firstPageWithTwoElements = PageRequest.of(pageNumber, PAGE_SIZE);
+        return invoiceRepository.findAll(firstPageWithTwoElements);
     }
 
     @Override
