@@ -1,5 +1,6 @@
 package com.scm.backend.model.dto;
 
+import com.scm.backend.util.InternalState;
 import com.sun.istack.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -45,4 +46,6 @@ public class SupplierDto extends SupperDto {
     private Long paid = 0L;
 
     private LocalDate latestSupply;
+
+    InternalState internalState;
 }

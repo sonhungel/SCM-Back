@@ -1,5 +1,6 @@
 package com.scm.backend.model.dto;
 
+import com.scm.backend.util.InternalState;
 import com.scm.backend.util.ItemState;
 import com.sun.istack.NotNull;
 import lombok.EqualsAndHashCode;
