@@ -4,4 +4,8 @@ public interface MonthlyReportDto {
     Long getCost();
 
     Long getPaid();
+
+    Object getItemsWarning();
+
+    Object getItemsOutOfStock();
 }

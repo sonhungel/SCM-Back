@@ -1,10 +1,13 @@
 package com.scm.backend.web;
 
 import com.scm.backend.model.dto.*;
+import com.scm.backend.model.entity.Item;
 import com.scm.backend.model.entity.User;
+import com.scm.backend.service.ItemService;
 import com.scm.backend.service.ReportService;
 import com.scm.backend.service.UserService;
 import com.scm.backend.util.InternalState;
+import com.scm.backend.util.ItemDtoMapper;
 import com.scm.backend.util.UserDtoMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -28,6 +31,12 @@ public class ReportController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private ItemService itemService;
+
+    @Autowired
+    private ItemDtoMapper itemDtoMapper;
 
     @Autowired
     private UserDtoMapper userDtoMapper;
@@ -63,6 +72,15 @@ public class ReportController {
                     .collect(Collectors.toList());
             totalMonthlyCost = totalMonthlyCostList.stream().reduce(0L, Long::sum);
         }
+
+        List<Item> itemList = itemService.findItemWithQuery("").stream()
+                .filter(e -> e.getInternalState() != InternalState.DELETED).collect(Collectors.toList());
+
+        List<ItemDto> listItemWarning = itemDtoMapper.toListItemDto(itemList.stream()
+                .filter(e -> e.getAvailableQuantity() < e.getMinimumQuantity() && e.getAvailableQuantity() > 0).collect(Collectors.toList()));
+
+        List<ItemDto> listItemOutOfStock = itemDtoMapper.toListItemDto(itemList.stream()
+                .filter(e -> e.getAvailableQuantity() <= 0).collect(Collectors.toList()));
 
         DailyReportDto dailyReportDto = new DailyReportDto() {
             @Override
@@ -144,6 +162,16 @@ public class ReportController {
                     @Override
                     public Long getPaid() {
                         return finalTotalMonthlyPaid;
+                    }
+
+                    @Override
+                    public Object getItemsWarning() {
+                        return listItemWarning;
+                    }
+
+                    @Override
+                    public Object getItemsOutOfStock() {
+                        return listItemOutOfStock;
                     }
                 };
                 return monthlyReportDto;
