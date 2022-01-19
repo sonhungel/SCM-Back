@@ -69,6 +69,7 @@ public class InvoiceServiceImpl implements InvoiceService {
         Customer customer = customerRepository.findCustomerByCustomerNumber(invoiceDto.getCustomer().getCustomerNumber())
                 .orElseThrow(() -> new CustomerNumberNotFoundException("Customer not found", invoiceDto.getCustomer().getCustomerNumber()));
 
+        LocalDate date = LocalDate.of(2022, 1, 20);
 
         Invoice invoice = Invoice.builder()
                 .user(user)
@@ -76,7 +77,8 @@ public class InvoiceServiceImpl implements InvoiceService {
                 .paid(0L)
                 .status(InvoiceState.OPEN)
                 .internalState(InternalState.ACTIVE)
-                .addedDate(LocalDate.now())
+                //.addedDate(LocalDate.now())
+                .addedDate(date)
                 .build();
 
         invoiceRepository.saveAndFlush(invoice);
