@@ -2,13 +2,16 @@ package com.scm.backend.web;
 
 import com.scm.backend.model.dto.GetItemsDto;
 import com.scm.backend.model.dto.ItemDto;
+import com.scm.backend.model.dto.PaginationDto;
 import com.scm.backend.model.dto.ResponseDto;
+import com.scm.backend.model.entity.Invoice;
 import com.scm.backend.model.entity.Item;
 import com.scm.backend.model.exception.*;
 import com.scm.backend.service.ItemService;
 import com.scm.backend.util.InternalState;
 import com.scm.backend.util.ItemDtoMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -57,6 +60,19 @@ public class ItemController {
     public List<ItemDto> finItems(@RequestParam("searchValue") String searchValue){
         return itemDtoMapper.toListItemDto(itemService.findItemWithQuery(searchValue)
                 .stream().filter(e -> e.getInternalState() != InternalState.DELETED).collect(Collectors.toList()));
+    }
+
+    @GetMapping("/{pageNumber}")
+    public PaginationDto finItems(@PathVariable int pageNumber){
+        Page<Item> itemPage = itemService.getAllItemWithPage(pageNumber);
+
+        PaginationDto paginationDto = new PaginationDto();
+        if(itemPage.hasContent()) {
+            paginationDto.setData(itemDtoMapper.toListItemDto(itemPage.getContent()));
+        }
+        paginationDto.setHasNext(itemPage.hasNext());
+        paginationDto.setHasPrevious(itemPage.hasPrevious());
+        return paginationDto;
     }
 
     /*@GetMapping("/addQuantity")

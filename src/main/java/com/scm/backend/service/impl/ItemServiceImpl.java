@@ -5,6 +5,7 @@ import com.scm.backend.model.dto.ItemDto;
 import com.scm.backend.model.dto.ItemRefDto;
 import com.scm.backend.model.dto.SupplierDto;
 import com.scm.backend.model.dto.SuptTicketDto;
+import com.scm.backend.model.entity.Invoice;
 import com.scm.backend.model.entity.Item;
 import com.scm.backend.model.entity.ItemType;
 import com.scm.backend.model.entity.Supplier;
@@ -18,6 +19,9 @@ import com.scm.backend.service.ItemTypeService;
 import com.scm.backend.service.SupTicketService;
 import com.scm.backend.util.InternalState;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,6 +33,7 @@ import java.util.Objects;
 @Service
 @Transactional(rollbackFor = Exception.class)
 public class ItemServiceImpl implements ItemService {
+    private final int PAGE_SIZE = 15;
 
     @Autowired
     private ItemRepository itemRepository;
@@ -67,6 +72,12 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public List<Item> findItemWithQuery(String searchString) {
         return itemRepository.findItemsQuery(searchString);
+    }
+
+    @Override
+    public Page<Item> getAllItemWithPage(int pageNumber) {
+        Pageable firstPageWithTwoElements = PageRequest.of(pageNumber, PAGE_SIZE);
+        return itemRepository.findByInternalStateNot(InternalState.DELETED, firstPageWithTwoElements);
     }
 
     @Override
